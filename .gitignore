@@ -23,3 +23,6 @@ Thumbs.db
 
 # Build artifacts
 *.war
+
+# Local database configuration
+src/main/resources/db.properties
