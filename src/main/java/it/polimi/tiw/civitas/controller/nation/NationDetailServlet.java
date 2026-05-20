@@ -8,6 +8,8 @@ import it.polimi.tiw.civitas.model.Citizen;
 import it.polimi.tiw.civitas.model.MembershipRole;
 import it.polimi.tiw.civitas.model.Nation;
 import it.polimi.tiw.civitas.model.User;
+import it.polimi.tiw.civitas.dao.LawDAO;
+import it.polimi.tiw.civitas.model.Law;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,12 +31,14 @@ public class NationDetailServlet extends HttpServlet {
     private NationDAO nationDAO;
     private MembershipDAO membershipDAO;
     private AnnouncementDAO announcementDAO;
+    private LawDAO lawDAO;
 
     @Override
     public void init() {
         this.nationDAO = new NationDAO();
         this.membershipDAO = new MembershipDAO();
         this.announcementDAO = new AnnouncementDAO();
+        this.lawDAO = new LawDAO();
     }
 
     @Override
@@ -58,6 +62,7 @@ public class NationDetailServlet extends HttpServlet {
 
             List<Citizen> citizens = membershipDAO.findCitizensByNationId(nationId);
             List<Announcement> announcements = announcementDAO.findByNationId(nationId);
+            List<Law> laws = lawDAO.findByNationId(nationId);
 
             User loggedUser = getLoggedUser(request);
 
@@ -81,6 +86,7 @@ public class NationDetailServlet extends HttpServlet {
             request.setAttribute("currentUserMember", currentUserMember);
             request.setAttribute("canCreateAnnouncement", canCreateAnnouncement);
             request.setAttribute("joinError", request.getParameter("joinError"));
+            request.setAttribute("laws", laws);
 
             request.getRequestDispatcher(NATION_DETAIL_VIEW).forward(request, response);
 
