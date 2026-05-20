@@ -19,7 +19,10 @@
     boolean currentUserMember = Boolean.TRUE.equals(request.getAttribute("currentUserMember"));
     boolean alreadyVoted = Boolean.TRUE.equals(request.getAttribute("alreadyVoted"));
     boolean canVote = Boolean.TRUE.equals(request.getAttribute("canVote"));
+    boolean canCloseLaw = Boolean.TRUE.equals(request.getAttribute("canCloseLaw"));
+
     String voteError = (String) request.getAttribute("voteError");
+    String workflowError = (String) request.getAttribute("workflowError");
 %>
 <!DOCTYPE html>
 <html lang="it">
@@ -100,6 +103,36 @@
                     <button type="submit" name="voteValue" value="NO" class="button secondary">NO</button>
                     <button type="submit" name="voteValue" value="ABSTAIN" class="button secondary">ABSTAIN</button>
                 </form>
+            <% } %>
+        </section>
+
+        <hr>
+
+        <section class="workflow-panel">
+            <h2>Gestione votazione</h2>
+
+            <% if (workflowError != null && !workflowError.isBlank()) { %>
+                <div class="alert alert-error"><%= HtmlUtil.escape(workflowError) %></div>
+            <% } %>
+
+            <% if (canCloseLaw) { %>
+                <p class="muted">
+                    Questa legge è ancora in stato <strong>PROPOSED</strong>.
+                    Puoi chiudere la votazione e calcolare l'esito.
+                </p>
+
+                <form method="post" action="<%= request.getContextPath() %>/law/close">
+                    <input type="hidden" name="lawId" value="<%= law.getId() %>">
+                    <button type="submit" class="button">Chiudi votazione</button>
+                </form>
+            <% } else if ("PROPOSED".equals(law.getStatus().name())) { %>
+                <p class="muted">
+                    Solo FOUNDER o MINISTER possono chiudere la votazione.
+                </p>
+            <% } else { %>
+                <p class="badge">
+                    Votazione chiusa: <%= HtmlUtil.escape(law.getStatus().name()) %>
+                </p>
             <% } %>
         </section>
 

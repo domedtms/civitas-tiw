@@ -9,6 +9,7 @@ import it.polimi.tiw.civitas.model.LawStatus;
 import it.polimi.tiw.civitas.model.Nation;
 import it.polimi.tiw.civitas.model.User;
 import it.polimi.tiw.civitas.model.VoteValue;
+import it.polimi.tiw.civitas.service.LawWorkflowService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,6 +32,7 @@ public class LawDetailServlet extends HttpServlet {
     private NationDAO nationDAO;
     private VoteDAO voteDAO;
     private MembershipDAO membershipDAO;
+    private LawWorkflowService lawWorkflowService;
 
     @Override
     public void init() {
@@ -38,6 +40,7 @@ public class LawDetailServlet extends HttpServlet {
         this.nationDAO = new NationDAO();
         this.voteDAO = new VoteDAO();
         this.membershipDAO = new MembershipDAO();
+        this.lawWorkflowService = new LawWorkflowService();
     }
 
     @Override
@@ -76,6 +79,12 @@ public class LawDetailServlet extends HttpServlet {
             boolean alreadyVoted = false;
             boolean canVote = false;
 
+            boolean canCloseLaw = false;
+
+            if (loggedUser != null) {
+                canCloseLaw = lawWorkflowService.canCloseLaw(loggedUser.getId(), lawId);
+            }
+
             if (loggedUser != null) {
                 currentUserMember = membershipDAO.existsByUserAndNation(loggedUser.getId(), law.getNationId());
                 alreadyVoted = voteDAO.existsByLawAndUser(lawId, loggedUser.getId());
@@ -89,6 +98,8 @@ public class LawDetailServlet extends HttpServlet {
             request.setAttribute("alreadyVoted", alreadyVoted);
             request.setAttribute("canVote", canVote);
             request.setAttribute("voteError", request.getParameter("voteError"));
+            request.setAttribute("canCloseLaw", canCloseLaw);
+            request.setAttribute("workflowError", request.getParameter("workflowError"));
 
             request.getRequestDispatcher(LAW_DETAIL_VIEW).forward(request, response);
 
