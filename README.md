@@ -24,6 +24,88 @@ Il progetto segue una separazione a livelli:
 - Business Logic Layer: Servlet e Service
 - Data Access Layer: DAO, JDBC, SQL
 
+## Avvio locale
+
+### Requisiti
+
+- Java 17
+- Maven
+- MySQL Server
+- Jetty
+
+### Setup database
+
+Avviare MySQL:
+```bash
+sudo systemctl start mysql
+```
+
+Creare lo schema:
+```bash
+sudo mysql < database/schema.sql
+```
+
+Verificare le tabelle:
+```bash
+sudo mysql -e "USE civitas_db; SHOW TABLES;"
+```
+
+### Configurazione database
+
+Creare il file locale:
+```text
+src/main/resources/db.properties
+```
+
+partendo da:
+```text
+src/main/resources/db.properties.example
+```
+
+Esempio:
+```properties
+db.url=jdbc:mysql://localhost:3306/civitas_db?serverTimezone=UTC
+db.user=civitas_user
+db.password=civitas_password
+```
+
+Il file `db.properties` non deve essere versionato.
+
+### Build
+
+```bash
+mvn clean package
+```
+
+### Esecuzione locale
+
+L'applicazione è stata testata localmente con Jetty su:
+```text
+localhost:8080
+```
+
+tramite:
+```bash
+mvn jetty:run
+```
+
+
+## Credenziali di test
+
+Le credenziali possono essere create tramite la pagina di registrazione.
+
+Esempio consigliato:
+
+```text
+Founder
+email: founder@test.it
+password: Password123
+
+Citizen
+email: citizen@test.it
+password: Password123
+```
+
 ## Livelli funzionali previsti
 
 ### Livello 1
