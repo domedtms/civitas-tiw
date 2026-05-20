@@ -308,3 +308,42 @@ code {
     font-size: 12px;
     font-weight: bold;
 }
+.vote-counts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.vote-count-card {
+    padding: 18px;
+    background: #f8f5ef;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.vote-count-card strong {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.vote-count-card span {
+    color: #666;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.vote-panel {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+}
+
+.vote-form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
