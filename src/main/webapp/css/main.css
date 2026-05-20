@@ -232,3 +232,33 @@ hr {
     background: #f8f5ef;
     font-size: 14px;
 }
+
+.section-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.announcement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.announcement-card {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+}
+
+.announcement-card h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.announcement-card p {
+    line-height: 1.6;
+}
