@@ -1,8 +1,11 @@
 package it.polimi.tiw.civitas.controller.nation;
 
+import it.polimi.tiw.civitas.dao.AnnouncementDAO;
 import it.polimi.tiw.civitas.dao.MembershipDAO;
 import it.polimi.tiw.civitas.dao.NationDAO;
+import it.polimi.tiw.civitas.model.Announcement;
 import it.polimi.tiw.civitas.model.Citizen;
+import it.polimi.tiw.civitas.model.MembershipRole;
 import it.polimi.tiw.civitas.model.Nation;
 import it.polimi.tiw.civitas.model.User;
 
@@ -25,11 +28,13 @@ public class NationDetailServlet extends HttpServlet {
 
     private NationDAO nationDAO;
     private MembershipDAO membershipDAO;
+    private AnnouncementDAO announcementDAO;
 
     @Override
     public void init() {
         this.nationDAO = new NationDAO();
         this.membershipDAO = new MembershipDAO();
+        this.announcementDAO = new AnnouncementDAO();
     }
 
     @Override
@@ -52,14 +57,29 @@ public class NationDetailServlet extends HttpServlet {
             }
 
             List<Citizen> citizens = membershipDAO.findCitizensByNationId(nationId);
+            List<Announcement> announcements = announcementDAO.findByNationId(nationId);
 
             User loggedUser = getLoggedUser(request);
-            boolean currentUserMember = loggedUser != null
-                    && membershipDAO.existsByUserAndNation(loggedUser.getId(), nationId);
+
+            boolean currentUserMember = false;
+            boolean canCreateAnnouncement = false;
+
+            if (loggedUser != null) {
+                Optional<MembershipRole> roleOptional =
+                        membershipDAO.findRoleByUserAndNation(loggedUser.getId(), nationId);
+
+                currentUserMember = roleOptional.isPresent();
+
+                canCreateAnnouncement = roleOptional
+                        .map(role -> role == MembershipRole.FOUNDER || role == MembershipRole.MINISTER)
+                        .orElse(false);
+            }
 
             request.setAttribute("nation", nationOptional.get());
             request.setAttribute("citizens", citizens);
+            request.setAttribute("announcements", announcements);
             request.setAttribute("currentUserMember", currentUserMember);
+            request.setAttribute("canCreateAnnouncement", canCreateAnnouncement);
             request.setAttribute("joinError", request.getParameter("joinError"));
 
             request.getRequestDispatcher(NATION_DETAIL_VIEW).forward(request, response);

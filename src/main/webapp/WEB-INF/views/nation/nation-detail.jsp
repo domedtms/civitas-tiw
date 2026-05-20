@@ -2,13 +2,16 @@
 <%@ page import="it.polimi.tiw.civitas.model.Nation" %>
 <%@ page import="it.polimi.tiw.civitas.model.Citizen" %>
 <%@ page import="it.polimi.tiw.civitas.model.User" %>
+<%@ page import="it.polimi.tiw.civitas.model.Announcement" %>
 <%@ page import="it.polimi.tiw.civitas.util.HtmlUtil" %>
 <%@ page import="java.util.List" %>
 <%
     Nation nation = (Nation) request.getAttribute("nation");
     List<Citizen> citizens = (List<Citizen>) request.getAttribute("citizens");
+    List<Announcement> announcements = (List<Announcement>) request.getAttribute("announcements");
     User loggedUser = (User) session.getAttribute("loggedUser");
     boolean currentUserMember = Boolean.TRUE.equals(request.getAttribute("currentUserMember"));
+    boolean canCreateAnnouncement = Boolean.TRUE.equals(request.getAttribute("canCreateAnnouncement"));
     String joinError = (String) request.getAttribute("joinError");
 %>
 <!DOCTYPE html>
@@ -58,6 +61,42 @@
                 </form>
             <% } %>
         </div>
+
+        <hr>
+
+        <section>
+            <div class="section-title-row">
+                <div>
+                    <h2>Comunicati ufficiali</h2>
+                    <p class="muted">Aggiornamenti pubblicati dagli utenti autorizzati.</p>
+                </div>
+
+                <% if (canCreateAnnouncement) { %>
+                    <a class="button" href="<%= request.getContextPath() %>/announcements/create?nationId=<%= nation.getId() %>">
+                        Nuovo comunicato
+                    </a>
+                <% } %>
+            </div>
+
+            <% if (announcements == null || announcements.isEmpty()) { %>
+                <p class="muted">Non ci sono ancora comunicati ufficiali.</p>
+            <% } else { %>
+                <div class="announcement-list">
+                    <% for (Announcement announcement : announcements) { %>
+                        <article class="announcement-card">
+                            <h3><%= HtmlUtil.escape(announcement.getTitle()) %></h3>
+                            <p><%= HtmlUtil.escape(announcement.getContent()) %></p>
+                            <p class="muted">
+                                Autore ID: <%= announcement.getAuthorId() %>
+                                <% if (announcement.getCreatedAt() != null) { %>
+                                    · <%= HtmlUtil.escape(announcement.getCreatedAt().toString()) %>
+                                <% } %>
+                            </p>
+                        </article>
+                    <% } %>
+                </div>
+            <% } %>
+        </section>
 
         <hr>
 
