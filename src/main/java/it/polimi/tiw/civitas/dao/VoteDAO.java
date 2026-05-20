@@ -98,6 +98,12 @@ public class VoteDAO {
     }
 
     public Map<VoteValue, Integer> countByLawGrouped(int lawId) throws SQLException {
+        try (Connection connection = ConnectionHandler.getConnection()) {
+            return countByLawGrouped(connection, lawId);
+        }
+    }
+
+    public Map<VoteValue, Integer> countByLawGrouped(Connection connection, int lawId) throws SQLException {
         String sql = """
                 SELECT vote_value, COUNT(*) AS total
                 FROM votes
@@ -111,9 +117,7 @@ public class VoteDAO {
             counts.put(value, 0);
         }
 
-        try (Connection connection = ConnectionHandler.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, lawId);
 
             try (ResultSet resultSet = statement.executeQuery()) {
