@@ -37,12 +37,7 @@ public class AnnouncementService {
             throw new AnnouncementException("Nation not found.");
         }
 
-        boolean authorized = membershipDAO.hasAnyRole(
-                authorId,
-                nationId,
-                MembershipRole.FOUNDER,
-                MembershipRole.MINISTER
-        );
+        boolean authorized = canCreateAnnouncement(authorId, nationId);
 
         if (!authorized) {
             throw new AnnouncementException("You are not authorized to publish official announcements.");
@@ -55,6 +50,19 @@ public class AnnouncementService {
         announcement.setContent(normalizedContent);
 
         return announcementDAO.create(announcement);
+    }
+
+    public boolean canCreateAnnouncement(int userId, int nationId) throws SQLException {
+        if (userId <= 0 || nationId <= 0) {
+            return false;
+        }
+
+        return membershipDAO.hasAnyRole(
+                userId,
+                nationId,
+                MembershipRole.FOUNDER,
+                MembershipRole.MINISTER
+        );
     }
 
     private void validateInput(int nationId, int authorId, String title, String content)

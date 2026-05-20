@@ -262,3 +262,14 @@ hr {
 .announcement-card p {
     line-height: 1.6;
 }
+
+code {
+    padding: 2px 6px;
+    background: #f1ede5;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.alert-error {
+    word-break: break-word;
+}

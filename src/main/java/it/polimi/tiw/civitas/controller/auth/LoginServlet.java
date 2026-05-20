@@ -51,10 +51,12 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
 
         } catch (AuthException e) {
+            preserveFormValues(request, email);
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher(LOGIN_VIEW).forward(request, response);
 
         } catch (SQLException e) {
+            preserveFormValues(request, email);
             request.setAttribute("error", "Unexpected error. Please try again later.");
             request.getRequestDispatcher(LOGIN_VIEW).forward(request, response);
         }
@@ -64,5 +66,9 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             user.setPasswordHash(null);
         }
+    }
+
+    private void preserveFormValues(HttpServletRequest request, String email) {
+        request.setAttribute("email", email);
     }
 }
