@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MembershipDAO {
 
@@ -107,5 +108,43 @@ public class MembershipDAO {
                 MembershipRole.valueOf(resultSet.getString("role")),
                 joinedAtTimestamp != null ? joinedAtTimestamp.toLocalDateTime() : null
         );
+    }
+    public Optional<MembershipRole> findRoleByUserAndNation(int userId, int nationId) throws SQLException {
+        String sql = """
+                SELECT role
+                FROM memberships
+                WHERE user_id = ? AND nation_id = ?
+                """;
+
+        try (Connection connection = ConnectionHandler.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            statement.setInt(2, nationId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                return Optional.of(MembershipRole.valueOf(resultSet.getString("role")));
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public boolean hasAnyRole(int userId, int nationId, MembershipRole... roles) throws SQLException {
+        Optional<MembershipRole> currentRole = findRoleByUserAndNation(userId, nationId);
+
+        if (currentRole.isEmpty()) {
+            return false;
+        }
+
+        for (MembershipRole role : roles) {
+            if (currentRole.get() == role) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
