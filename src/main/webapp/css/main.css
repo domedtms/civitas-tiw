@@ -353,3 +353,11 @@ code {
     border: 1px solid #ddd7cc;
     border-radius: 12px;
 }
+
+.danger-button {
+    background: #8a1f1f;
+}
+
+.danger-button:hover {
+    background: #6f1717;
+}
