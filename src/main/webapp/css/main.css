@@ -133,3 +133,60 @@ button.button {
     background: #e8e2d8;
     color: #222;
 }
+
+.page-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.nation-card,
+.empty-card {
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+}
+
+.nation-card h2 {
+    margin-top: 0;
+}
+
+.motto {
+    color: #333;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.wide-card {
+    max-width: 620px;
+}
+
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #cfc7bb;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    resize: vertical;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd7cc;
+    margin: 24px 0;
+}
