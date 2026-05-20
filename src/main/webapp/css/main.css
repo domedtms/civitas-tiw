@@ -347,3 +347,9 @@ code {
     gap: 12px;
     flex-wrap: wrap;
 }
+.workflow-panel {
+    padding: 20px;
+    background: #f8f5ef;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+}

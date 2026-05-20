@@ -42,22 +42,26 @@ public class LawDAO {
     }
 
     public Optional<Law> findById(int id) throws SQLException {
+        try (Connection connection = ConnectionHandler.getConnection()) {
+            return findById(connection, id);
+        }
+    }
+
+    public Optional<Law> findById(Connection connection, int id) throws SQLException {
         String sql = """
                 SELECT id, nation_id, proposer_id, title, description, status, created_at, closed_at
                 FROM laws
                 WHERE id = ?
                 """;
 
-        try (Connection connection = ConnectionHandler.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return Optional.of(mapLaw(resultSet));
                 }
-            }
+            }   
         }
 
         return Optional.empty();
