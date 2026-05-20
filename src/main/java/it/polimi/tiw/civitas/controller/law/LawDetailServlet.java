@@ -78,11 +78,12 @@ public class LawDetailServlet extends HttpServlet {
             boolean currentUserMember = false;
             boolean alreadyVoted = false;
             boolean canVote = false;
-
+            boolean canRepealLaw = false;
             boolean canCloseLaw = false;
 
             if (loggedUser != null) {
                 canCloseLaw = lawWorkflowService.canCloseLaw(loggedUser.getId(), lawId);
+                canRepealLaw = lawWorkflowService.canRepealLaw(loggedUser.getId(), lawId);
             }
 
             if (loggedUser != null) {
@@ -100,6 +101,7 @@ public class LawDetailServlet extends HttpServlet {
             request.setAttribute("voteError", request.getParameter("voteError"));
             request.setAttribute("canCloseLaw", canCloseLaw);
             request.setAttribute("workflowError", request.getParameter("workflowError"));
+            request.setAttribute("canRepealLaw", canRepealLaw);
 
             request.getRequestDispatcher(LAW_DETAIL_VIEW).forward(request, response);
 

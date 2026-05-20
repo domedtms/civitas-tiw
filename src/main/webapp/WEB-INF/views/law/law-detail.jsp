@@ -19,7 +19,9 @@
     boolean currentUserMember = Boolean.TRUE.equals(request.getAttribute("currentUserMember"));
     boolean alreadyVoted = Boolean.TRUE.equals(request.getAttribute("alreadyVoted"));
     boolean canVote = Boolean.TRUE.equals(request.getAttribute("canVote"));
+
     boolean canCloseLaw = Boolean.TRUE.equals(request.getAttribute("canCloseLaw"));
+    boolean canRepealLaw = Boolean.TRUE.equals(request.getAttribute("canRepealLaw"));
 
     String voteError = (String) request.getAttribute("voteError");
     String workflowError = (String) request.getAttribute("workflowError");
@@ -109,7 +111,7 @@
         <hr>
 
         <section class="workflow-panel">
-            <h2>Gestione votazione</h2>
+            <h2>Gestione legge</h2>
 
             <% if (workflowError != null && !workflowError.isBlank()) { %>
                 <div class="alert alert-error"><%= HtmlUtil.escape(workflowError) %></div>
@@ -125,10 +127,33 @@
                     <input type="hidden" name="lawId" value="<%= law.getId() %>">
                     <button type="submit" class="button">Chiudi votazione</button>
                 </form>
-            <% } else if ("PROPOSED".equals(law.getStatus().name())) { %>
+
+            <% } else if (canRepealLaw) { %>
+                <p class="muted">
+                    Questa legge è attualmente <strong>APPROVED</strong>.
+                    Puoi abrogarla se non è più valida per la micro-nazione.
+                </p>
+
+                <form method="post" action="<%= request.getContextPath() %>/law/repeal">
+                    <input type="hidden" name="lawId" value="<%= law.getId() %>">
+                    <button type="submit" class="button danger-button">Abroga legge</button>
+                </form>
+
+            <% } else if (law.getStatus().name().equals("PROPOSED")) { %>
                 <p class="muted">
                     Solo FOUNDER o MINISTER possono chiudere la votazione.
                 </p>
+
+            <% } else if (law.getStatus().name().equals("APPROVED")) { %>
+                <p class="badge">
+                    Legge approvata.
+                </p>
+
+            <% } else if (law.getStatus().name().equals("REPEALED")) { %>
+                <p class="badge">
+                    Legge abrogata.
+                </p>
+
             <% } else { %>
                 <p class="badge">
                     Votazione chiusa: <%= HtmlUtil.escape(law.getStatus().name()) %>

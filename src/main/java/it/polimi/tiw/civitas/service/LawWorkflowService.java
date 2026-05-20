@@ -56,6 +56,31 @@ public class LawWorkflowService {
         );
     }
 
+    public boolean canRepealLaw(int userId, int lawId) throws SQLException {
+        if (userId <= 0 || lawId <= 0) {
+            return false;
+        }
+
+        Optional<Law> lawOptional = lawDAO.findById(lawId);
+
+        if (lawOptional.isEmpty()) {
+            return false;
+        }
+
+        Law law = lawOptional.get();
+
+        if (law.getStatus() != LawStatus.APPROVED) {
+            return false;
+        }
+
+        return membershipDAO.hasAnyRole(
+                userId,
+                law.getNationId(),
+                MembershipRole.FOUNDER,
+                MembershipRole.MINISTER
+        );
+    }
+
     public LawStatus closeLaw(int lawId, int actorId) throws SQLException, LawWorkflowException {
         if (lawId <= 0) {
             throw new LawWorkflowException("Invalid law.");
@@ -127,6 +152,67 @@ public class LawWorkflowService {
 
             } finally {
                 connection.setAutoCommit(originalAutoCommit);
+            }
+        }
+    }
+
+    public void repealLaw(int lawId, int actorId) throws SQLException, LawWorkflowException {
+        if (lawId <= 0) {
+            throw new LawWorkflowException("Invalid law.");
+        }
+
+        if (actorId <= 0) {
+            throw new LawWorkflowException("Invalid actor.");
+        }
+
+        try (Connection connection = ConnectionHandler.getConnection()) {
+            boolean originalAutoCommit = connection.getAutoCommit();
+
+            try {
+                connection.setAutoCommit(false);
+
+                Optional<Law> lawOptional = lawDAO.findById(connection, lawId);
+
+                if (lawOptional.isEmpty()) {
+                    throw new LawWorkflowException("Law not found.");
+                }
+
+                Law law = lawOptional.get();
+
+                if (law.getStatus() != LawStatus.APPROVED) {
+                    throw new LawWorkflowException("Only approved laws can be repealed.");
+                }
+
+                boolean authorized = membershipDAO.hasAnyRole(
+                        actorId,
+                        law.getNationId(),
+                        MembershipRole.FOUNDER,
+                        MembershipRole.MINISTER
+                );
+
+                if (!authorized) {
+                    throw new LawWorkflowException("You are not authorized to repeal this law.");
+                }
+
+                lawDAO.updateStatus(connection, lawId, LawStatus.REPEALED);
+
+                DecisionLog decisionLog = new DecisionLog();
+                decisionLog.setNationId(law.getNationId());
+                decisionLog.setLawId(lawId);
+                decisionLog.setActorId(actorId);
+                decisionLog.setAction(DecisionLogAction.LAW_REPEALED);
+                decisionLog.setDescription("Law \"" + law.getTitle() + "\" was repealed.");
+
+                decisionLogDAO.create(connection, decisionLog);
+
+                connection.commit();
+
+            } catch (SQLException | LawWorkflowException e) {
+                connection.rollback();
+                throw e;
+
+            } finally {
+                    connection.setAutoCommit(originalAutoCommit);
             }
         }
     }
