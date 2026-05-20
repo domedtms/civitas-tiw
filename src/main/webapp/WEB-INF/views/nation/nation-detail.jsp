@@ -3,15 +3,20 @@
 <%@ page import="it.polimi.tiw.civitas.model.Citizen" %>
 <%@ page import="it.polimi.tiw.civitas.model.User" %>
 <%@ page import="it.polimi.tiw.civitas.model.Announcement" %>
+<%@ page import="it.polimi.tiw.civitas.model.Law" %>
 <%@ page import="it.polimi.tiw.civitas.util.HtmlUtil" %>
 <%@ page import="java.util.List" %>
 <%
     Nation nation = (Nation) request.getAttribute("nation");
     List<Citizen> citizens = (List<Citizen>) request.getAttribute("citizens");
     List<Announcement> announcements = (List<Announcement>) request.getAttribute("announcements");
+    List<Law> laws = (List<Law>) request.getAttribute("laws");
+
     User loggedUser = (User) session.getAttribute("loggedUser");
+
     boolean currentUserMember = Boolean.TRUE.equals(request.getAttribute("currentUserMember"));
     boolean canCreateAnnouncement = Boolean.TRUE.equals(request.getAttribute("canCreateAnnouncement"));
+
     String joinError = (String) request.getAttribute("joinError");
 %>
 <!DOCTYPE html>
@@ -61,6 +66,44 @@
                 </form>
             <% } %>
         </div>
+
+        <hr>
+
+        <section>
+            <div class="section-title-row">
+                <div>
+                    <h2>Leggi</h2>
+                    <p class="muted">Proposte legislative della micro-nazione.</p>
+                </div>
+
+                <% if (currentUserMember) { %>
+                    <a class="button" href="<%= request.getContextPath() %>/laws/create?nationId=<%= nation.getId() %>">
+                        Proponi legge
+                    </a>
+                <% } %>
+            </div>
+
+            <% if (laws == null || laws.isEmpty()) { %>
+                <p class="muted">Non ci sono ancora leggi proposte.</p>
+            <% } else { %>
+                <div class="law-list">
+                    <% for (Law law : laws) { %>
+                        <article class="law-card">
+                            <div class="law-card-header">
+                                <h3><%= HtmlUtil.escape(law.getTitle()) %></h3>
+                                <span class="status-pill"><%= HtmlUtil.escape(law.getStatus().name()) %></span>
+                            </div>
+
+                            <p class="muted"><%= HtmlUtil.escape(law.getDescription()) %></p>
+
+                            <a class="button secondary" href="<%= request.getContextPath() %>/law?id=<%= law.getId() %>">
+                                Apri legge
+                            </a>
+                        </article>
+                    <% } %>
+                </div>
+            <% } %>
+        </section>
 
         <hr>
 
