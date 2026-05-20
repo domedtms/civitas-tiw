@@ -273,3 +273,38 @@ code {
 .alert-error {
     word-break: break-word;
 }
+
+.law-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.law-card {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+}
+
+.law-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.law-card h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f1ede5;
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+}
