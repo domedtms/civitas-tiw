@@ -44,8 +44,20 @@ public class CreateAnnouncementServlet extends HttpServlet {
             return;
         }
 
-        request.setAttribute("nationId", nationId);
-        request.getRequestDispatcher(CREATE_ANNOUNCEMENT_VIEW).forward(request, response);
+        try {
+            boolean authorized = announcementService.canCreateAnnouncement(loggedUser.getId(), nationId);
+
+            if (!authorized) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+
+            request.setAttribute("nationId", nationId);
+            request.getRequestDispatcher(CREATE_ANNOUNCEMENT_VIEW).forward(request, response);
+
+        } catch (SQLException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

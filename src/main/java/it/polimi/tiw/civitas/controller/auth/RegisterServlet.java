@@ -52,10 +52,12 @@ public class RegisterServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
 
         } catch (AuthException e) {
+            preserveFormValues(request, username, email);
             request.setAttribute("error", e.getMessage());
             request.getRequestDispatcher(REGISTER_VIEW).forward(request, response);
 
         } catch (SQLException e) {
+            preserveFormValues(request, username, email);
             request.setAttribute("error", "Unexpected error. Please try again later.");
             request.getRequestDispatcher(REGISTER_VIEW).forward(request, response);
         }
@@ -65,5 +67,9 @@ public class RegisterServlet extends HttpServlet {
         if (user != null) {
             user.setPasswordHash(null);
         }
+    }
+    private void preserveFormValues(HttpServletRequest request, String username, String email) {
+        request.setAttribute("username", username);
+        request.setAttribute("email", email);
     }
 }
