@@ -400,3 +400,31 @@ code {
     color: #666;
     font-size: 14px;
 }
+
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.resource-card {
+    padding: 20px;
+    background: #f8f5ef;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.resource-card strong {
+    display: block;
+    font-size: 30px;
+    margin-bottom: 6px;
+}
+
+.resource-card span {
+    color: #666;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
