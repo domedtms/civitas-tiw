@@ -23,6 +23,7 @@
             <div class="actions">
                 <a class="button" href="<%= request.getContextPath() %>/nations">Micro-nazioni</a>
                 <a class="button secondary" href="<%= request.getContextPath() %>/nations/create">Crea micro-nazione</a>
+                <a class="button secondary" href="<%= request.getContextPath() %>/ranking">Classifica</a>
 
                 <form method="post" action="<%= request.getContextPath() %>/logout">
                     <button type="submit" class="button">Logout</button>
@@ -35,6 +36,7 @@
                 <a class="button" href="<%= request.getContextPath() %>/login">Login</a>
                 <a class="button secondary" href="<%= request.getContextPath() %>/register">Registrati</a>
                 <a class="button secondary" href="<%= request.getContextPath() %>/nations">Esplora micro-nazioni</a>
+                <a class="button secondary" href="<%= request.getContextPath() %>/ranking">Classifica</a>
             </div>
         <% } %>
     </section>
