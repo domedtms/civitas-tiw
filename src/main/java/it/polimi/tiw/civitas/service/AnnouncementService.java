@@ -5,6 +5,13 @@ import it.polimi.tiw.civitas.dao.MembershipDAO;
 import it.polimi.tiw.civitas.dao.NationDAO;
 import it.polimi.tiw.civitas.model.Announcement;
 import it.polimi.tiw.civitas.model.MembershipRole;
+import it.polimi.tiw.civitas.dao.DecisionLogDAO;
+import it.polimi.tiw.civitas.dao.NationResourceDAO;
+import it.polimi.tiw.civitas.model.DecisionLog;
+import it.polimi.tiw.civitas.model.DecisionLogAction;
+import it.polimi.tiw.civitas.util.ConnectionHandler;
+
+import java.sql.Connection;
 
 import java.sql.SQLException;
 
@@ -18,11 +25,15 @@ public class AnnouncementService {
     private final AnnouncementDAO announcementDAO;
     private final MembershipDAO membershipDAO;
     private final NationDAO nationDAO;
+    private final NationResourceDAO nationResourceDAO;
+    private final DecisionLogDAO decisionLogDAO;
 
     public AnnouncementService() {
         this.announcementDAO = new AnnouncementDAO();
         this.membershipDAO = new MembershipDAO();
         this.nationDAO = new NationDAO();
+        this.nationResourceDAO = new NationResourceDAO();
+        this.decisionLogDAO = new DecisionLogDAO();
     }
 
     public int createAnnouncement(int nationId, int authorId, String title, String content)
@@ -49,7 +60,36 @@ public class AnnouncementService {
         announcement.setTitle(normalizedTitle);
         announcement.setContent(normalizedContent);
 
-        return announcementDAO.create(announcement);
+        try (Connection connection = ConnectionHandler.getConnection()) {
+            boolean originalAutoCommit = connection.getAutoCommit();
+
+            try {
+                connection.setAutoCommit(false);
+
+                int announcementId = announcementDAO.create(connection, announcement);
+
+                nationResourceDAO.incrementResources(connection, nationId, 0, 2, 0);
+
+                DecisionLog resourceLog = new DecisionLog();
+                resourceLog.setNationId(nationId);
+                resourceLog.setLawId(null);
+                resourceLog.setActorId(authorId);
+                resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
+                resourceLog.setDescription("Resources updated after official announcement: culture +2.");
+
+                decisionLogDAO.create(connection, resourceLog);
+
+                connection.commit();
+                return announcementId;
+
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+
+            } finally {
+                connection.setAutoCommit(originalAutoCommit);
+            }
+        }
     }
 
     public boolean canCreateAnnouncement(int userId, int nationId) throws SQLException {

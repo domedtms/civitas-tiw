@@ -15,14 +15,18 @@ import java.util.List;
 public class AnnouncementDAO {
 
     public int create(Announcement announcement) throws SQLException {
+        try (Connection connection = ConnectionHandler.getConnection()) {
+            return create(connection, announcement);
+        }
+    }
+
+    public int create(Connection connection, Announcement announcement) throws SQLException {
         String sql = """
                 INSERT INTO announcements (nation_id, author_id, title, content)
                 VALUES (?, ?, ?, ?)
                 """;
 
-        try (Connection connection = ConnectionHandler.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, announcement.getNationId());
             statement.setInt(2, announcement.getAuthorId());
             statement.setString(3, announcement.getTitle());
