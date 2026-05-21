@@ -11,6 +11,7 @@ import it.polimi.tiw.civitas.model.LawStatus;
 import it.polimi.tiw.civitas.model.MembershipRole;
 import it.polimi.tiw.civitas.model.VoteValue;
 import it.polimi.tiw.civitas.util.ConnectionHandler;
+import it.polimi.tiw.civitas.dao.NationResourceDAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,12 +24,14 @@ public class LawWorkflowService {
     private final VoteDAO voteDAO;
     private final MembershipDAO membershipDAO;
     private final DecisionLogDAO decisionLogDAO;
+    private final NationResourceDAO nationResourceDAO;
 
     public LawWorkflowService() {
         this.lawDAO = new LawDAO();
         this.voteDAO = new VoteDAO();
         this.membershipDAO = new MembershipDAO();
         this.decisionLogDAO = new DecisionLogDAO();
+        this.nationResourceDAO = new NationResourceDAO();
     }
 
     public boolean canCloseLaw(int userId, int lawId) throws SQLException {
@@ -129,6 +132,7 @@ public class LawWorkflowService {
                         : LawStatus.REJECTED;
 
                 lawDAO.updateStatusAndClose(connection, lawId, resultStatus);
+                applyResourceUpdateForClosedLaw(connection, law, resultStatus);
 
                 DecisionLog decisionLog = new DecisionLog();
                 decisionLog.setNationId(law.getNationId());
@@ -195,6 +199,7 @@ public class LawWorkflowService {
                 }
 
                 lawDAO.updateStatus(connection, lawId, LawStatus.REPEALED);
+                nationResourceDAO.incrementResources(connection, law.getNationId(), 0, -5, 0);
 
                 DecisionLog decisionLog = new DecisionLog();
                 decisionLog.setNationId(law.getNationId());
@@ -202,6 +207,15 @@ public class LawWorkflowService {
                 decisionLog.setActorId(actorId);
                 decisionLog.setAction(DecisionLogAction.LAW_REPEALED);
                 decisionLog.setDescription("Law \"" + law.getTitle() + "\" was repealed.");
+
+                DecisionLog resourceLog = new DecisionLog();
+                resourceLog.setNationId(law.getNationId());
+                resourceLog.setLawId(lawId);
+                resourceLog.setActorId(null);
+                resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
+                resourceLog.setDescription("Resources updated after law repeal: culture -5.");
+
+                decisionLogDAO.create(connection, resourceLog);
 
                 decisionLogDAO.create(connection, decisionLog);
 
@@ -215,6 +229,26 @@ public class LawWorkflowService {
                     connection.setAutoCommit(originalAutoCommit);
             }
         }
+    }
+
+    private void applyResourceUpdateForClosedLaw(Connection connection, Law law, LawStatus resultStatus)
+            throws SQLException {
+
+        DecisionLog resourceLog = new DecisionLog();
+        resourceLog.setNationId(law.getNationId());
+        resourceLog.setLawId(law.getId());
+        resourceLog.setActorId(null);
+        resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
+
+        if (resultStatus == LawStatus.APPROVED) {
+            nationResourceDAO.incrementResources(connection, law.getNationId(), 0, 10, 5);
+            resourceLog.setDescription("Resources updated after law approval: culture +10, energy +5.");
+        } else {
+            nationResourceDAO.incrementResources(connection, law.getNationId(), 0, 0, -2);
+            resourceLog.setDescription("Resources updated after law rejection: energy -2.");
+        }
+
+        decisionLogDAO.create(connection, resourceLog);
     }
 
     private String buildDecisionDescription(Law law, LawStatus resultStatus, int yesVotes, int noVotes) {

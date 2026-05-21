@@ -5,6 +5,7 @@
 <%@ page import="it.polimi.tiw.civitas.model.Announcement" %>
 <%@ page import="it.polimi.tiw.civitas.model.Law" %>
 <%@ page import="it.polimi.tiw.civitas.util.HtmlUtil" %>
+<%@ page import="it.polimi.tiw.civitas.model.NationResources" %>
 <%@ page import="java.util.List" %>
 <%
     Nation nation = (Nation) request.getAttribute("nation");
@@ -18,6 +19,7 @@
     boolean canCreateAnnouncement = Boolean.TRUE.equals(request.getAttribute("canCreateAnnouncement"));
 
     String joinError = (String) request.getAttribute("joinError");
+    NationResources resources = (NationResources) request.getAttribute("resources");
 %>
 <!DOCTYPE html>
 <html lang="it">
@@ -69,6 +71,33 @@
                 </form>
             <% } %>
         </div>
+                <hr>
+
+        <section>
+            <h2>Risorse simboliche</h2>
+            <p class="muted">Stato sintetico della micro-nazione.</p>
+
+            <% if (resources == null) { %>
+                <p class="muted">Risorse non ancora inizializzate.</p>
+            <% } else { %>
+                <div class="resource-grid">
+                    <article class="resource-card">
+                        <strong><%= resources.getCoins() %></strong>
+                        <span>Coins</span>
+                    </article>
+
+                    <article class="resource-card">
+                        <strong><%= resources.getCulturePoints() %></strong>
+                        <span>Culture</span>
+                    </article>
+
+                    <article class="resource-card">
+                        <strong><%= resources.getEnergyPoints() %></strong>
+                        <span>Energy</span>
+                    </article>
+                </div>
+            <% } %>
+        </section>
 
         <hr>
 
