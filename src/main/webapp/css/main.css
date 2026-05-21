@@ -428,3 +428,23 @@ code {
     font-weight: bold;
     text-transform: uppercase;
 }
+
+.score-formula {
+    margin-top: 20px;
+    padding: 14px 16px;
+    background: #f8f5ef;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.ranking-table td,
+.ranking-table th {
+    white-space: nowrap;
+}
+
+.ranking-table td:nth-child(2),
+.ranking-table th:nth-child(2) {
+    min-width: 220px;
+}
