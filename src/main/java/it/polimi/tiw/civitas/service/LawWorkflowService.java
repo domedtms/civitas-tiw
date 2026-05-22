@@ -199,7 +199,7 @@ public class LawWorkflowService {
                 }
 
                 lawDAO.updateStatus(connection, lawId, LawStatus.REPEALED);
-                nationResourceDAO.incrementResources(connection, law.getNationId(), 0, -5, 0);
+                nationResourceDAO.incrementResources(connection, law.getNationId(), -10, -5, 0);
 
                 DecisionLog decisionLog = new DecisionLog();
                 decisionLog.setNationId(law.getNationId());
@@ -213,7 +213,7 @@ public class LawWorkflowService {
                 resourceLog.setLawId(lawId);
                 resourceLog.setActorId(null);
                 resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
-                resourceLog.setDescription("Resources updated after law repeal: culture -5.");
+                resourceLog.setDescription("Resources updated after law repeal: coins -10, culture -5.");
 
                 decisionLogDAO.create(connection, resourceLog);
 
@@ -241,11 +241,11 @@ public class LawWorkflowService {
         resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
 
         if (resultStatus == LawStatus.APPROVED) {
-            nationResourceDAO.incrementResources(connection, law.getNationId(), 0, 10, 5);
-            resourceLog.setDescription("Resources updated after law approval: culture +10, energy +5.");
+            nationResourceDAO.incrementResources(connection, law.getNationId(), 20, 10, 5);
+            resourceLog.setDescription("Resources updated after law approval: coins +20,culture +10, energy +5.");
         } else {
-            nationResourceDAO.incrementResources(connection, law.getNationId(), 0, 0, -2);
-            resourceLog.setDescription("Resources updated after law rejection: energy -2.");
+            nationResourceDAO.incrementResources(connection, law.getNationId(), -5, 0, -2);
+            resourceLog.setDescription("Resources updated after law rejection: coins -5, energy -2.");
         }
 
         decisionLogDAO.create(connection, resourceLog);

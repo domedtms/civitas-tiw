@@ -68,14 +68,14 @@ public class AnnouncementService {
 
                 int announcementId = announcementDAO.create(connection, announcement);
 
-                nationResourceDAO.incrementResources(connection, nationId, 0, 2, 0);
+                nationResourceDAO.incrementResources(connection, nationId, 3, 2, 0);
 
                 DecisionLog resourceLog = new DecisionLog();
                 resourceLog.setNationId(nationId);
                 resourceLog.setLawId(null);
                 resourceLog.setActorId(authorId);
                 resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
-                resourceLog.setDescription("Resources updated after official announcement: culture +2.");
+                resourceLog.setDescription("Resources updated after official announcement: coins +3, culture +2.");
 
                 decisionLogDAO.create(connection, resourceLog);
 
