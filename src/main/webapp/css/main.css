@@ -448,3 +448,12 @@ code {
 .ranking-table th:nth-child(2) {
     min-width: 220px;
 }
+
+.inline-form {
+    display: inline;
+}
+
+.small-button {
+    padding: 7px 10px;
+    font-size: 12px;
+}

@@ -17,8 +17,11 @@
 
     boolean currentUserMember = Boolean.TRUE.equals(request.getAttribute("currentUserMember"));
     boolean canCreateAnnouncement = Boolean.TRUE.equals(request.getAttribute("canCreateAnnouncement"));
+    boolean canManageRoles = Boolean.TRUE.equals(request.getAttribute("canManageRoles"));
 
     String joinError = (String) request.getAttribute("joinError");
+    String roleError = (String) request.getAttribute("roleError");
+
     NationResources resources = (NationResources) request.getAttribute("resources");
 %>
 <!DOCTYPE html>
@@ -56,6 +59,10 @@
 
         <% if (joinError != null && !joinError.isBlank()) { %>
             <div class="alert alert-error"><%= HtmlUtil.escape(joinError) %></div>
+        <% } %>
+
+        <% if (roleError != null && !roleError.isBlank()) { %>
+            <div class="alert alert-error"><%= HtmlUtil.escape(roleError) %></div>
         <% } %>
 
         <div class="join-panel">
@@ -188,16 +195,52 @@
                             <th>Username</th>
                             <th>Ruolo</th>
                             <th>Ingresso</th>
+                            <% if (canManageRoles) { %>
+                                <th>Azioni</th>
+                            <% } %>
                         </tr>
                         </thead>
+
                         <tbody>
                         <% for (Citizen citizen : citizens) { %>
-                            <tr>
+                                    <tr>
                                 <td><%= HtmlUtil.escape(citizen.getUsername()) %></td>
+
                                 <td><%= HtmlUtil.escape(citizen.getRole().name()) %></td>
+
                                 <td>
                                     <%= citizen.getJoinedAt() != null ? HtmlUtil.escape(citizen.getJoinedAt().toString()) : "-" %>
                                 </td>
+
+                                <% if (canManageRoles) { %>
+                                    <td>
+                                        <% if ("CITIZEN".equals(citizen.getRole().name())) { %>
+                                            <form method="post"
+                                                  action="<%= request.getContextPath() %>/nation/member/role"
+                                                  class="inline-form">
+                                                <input type="hidden" name="nationId" value="<%= nation.getId() %>">
+                                                <input type="hidden" name="targetUserId" value="<%= citizen.getUserId() %>">
+                                                <input type="hidden" name="action" value="PROMOTE_MINISTER">
+                                                <button type="submit" class="button secondary small-button">
+                                                    Promuovi ministro
+                                                </button>
+                                            </form>
+                                        <% } else if ("MINISTER".equals(citizen.getRole().name())) { %>
+                                            <form method="post"
+                                                  action="<%= request.getContextPath() %>/nation/member/role"
+                                                  class="inline-form">
+                                                <input type="hidden" name="nationId" value="<%= nation.getId() %>">
+                                                <input type="hidden" name="targetUserId" value="<%= citizen.getUserId() %>">
+                                                <input type="hidden" name="action" value="DEMOTE_CITIZEN">
+                                                <button type="submit" class="button danger-button small-button">
+                                                    Rimuovi ministro
+                                                </button>
+                                            </form>
+                                        <% } else { %>
+                                            <span class="muted">Fondatore</span>
+                                        <% } %>
+                                    </td>
+                                <% } %>
                             </tr>
                         <% } %>
                         </tbody>
