@@ -72,6 +72,7 @@ public class NationDetailServlet extends HttpServlet {
 
             boolean currentUserMember = false;
             boolean canCreateAnnouncement = false;
+            boolean canManageRoles = false;
 
             if (loggedUser != null) {
                 Optional<MembershipRole> roleOptional =
@@ -82,6 +83,10 @@ public class NationDetailServlet extends HttpServlet {
                 canCreateAnnouncement = roleOptional
                         .map(role -> role == MembershipRole.FOUNDER || role == MembershipRole.MINISTER)
                         .orElse(false);
+
+                canManageRoles = roleOptional
+                        .map(role -> role == MembershipRole.FOUNDER)
+                        .orElse(false);
             }
 
             request.setAttribute("nation", nationOptional.get());
@@ -89,7 +94,9 @@ public class NationDetailServlet extends HttpServlet {
             request.setAttribute("announcements", announcements);
             request.setAttribute("currentUserMember", currentUserMember);
             request.setAttribute("canCreateAnnouncement", canCreateAnnouncement);
+            request.setAttribute("canManageRoles", canManageRoles);
             request.setAttribute("joinError", request.getParameter("joinError"));
+            request.setAttribute("roleError", request.getParameter("roleError"));
             request.setAttribute("laws", laws);
             request.setAttribute("resources", resources);
 

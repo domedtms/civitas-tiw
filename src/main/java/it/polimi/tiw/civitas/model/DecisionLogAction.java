@@ -5,5 +5,6 @@ public enum DecisionLogAction {
     LAW_APPROVED,
     LAW_REJECTED,
     LAW_REPEALED,
-    RESOURCE_UPDATED
+    RESOURCE_UPDATED,
+    ROLE_UPDATED
 }
