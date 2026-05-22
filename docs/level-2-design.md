@@ -157,14 +157,18 @@ Ogni evento contiene:
 Le risorse simboliche rappresentano lo stato astratto della micro-nazione.
 
 Risorse:
+
 - `coins`;
 - `culture_points`;
 - `energy_points`.
 
 Regole iniziali:
-- legge approvata: `culture_points + 10`, `energy_points + 5`;
-- legge respinta: `energy_points - 2`, minimo `0`;
-- legge abrogata: `culture_points - 5`, minimo `0`.
+
+- nuova micro-nazione: `coins = 100`, `culture_points = 0`, `energy_points = 0`;
+- legge approvata: `coins + 20`, `culture_points + 10`, `energy_points + 5`;
+- legge respinta: `coins - 5`, `energy_points - 2`, minimo `0`;
+- legge abrogata: `coins - 10`, `culture_points - 5`, minimo `0`;
+- comunicato ufficiale: `coins + 3`, `culture_points + 2`.
 
 Le risorse non devono andare sotto zero.
 
