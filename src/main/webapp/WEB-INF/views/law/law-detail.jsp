@@ -25,6 +25,7 @@
 
     String voteError = (String) request.getAttribute("voteError");
     String workflowError = (String) request.getAttribute("workflowError");
+    String statusClass = "status-pill status-" + law.getStatus().name().toLowerCase();
 %>
 <!DOCTYPE html>
 <html lang="it">
@@ -45,7 +46,7 @@
             </a>
         </div>
 
-        <p class="badge"><%= HtmlUtil.escape(law.getStatus().name()) %></p>
+        <p class="<%= statusClass %>"><%= HtmlUtil.escape(law.getStatus().name()) %></p>
 
         <h1><%= HtmlUtil.escape(law.getTitle()) %></h1>
 
@@ -96,7 +97,14 @@
             <% } else if (alreadyVoted) { %>
                 <p class="badge">Hai già votato questa legge</p>
             <% } else if (!canVote) { %>
-                <p class="muted">Questa legge non è aperta al voto.</p>
+                <% if (!law.getStatus().name().equals("PROPOSED")) { %>
+                    <p class="muted">
+                        Questa legge non è più votabile perché si trova nello stato
+                        <strong><%= HtmlUtil.escape(law.getStatus().name()) %></strong>.
+                    </p>
+                <% } else { %>
+                    <p class="muted">Questa legge non è aperta al voto.</p>
+                <% } %>
             <% } else { %>
                 <form method="post" action="<%= request.getContextPath() %>/law/vote" class="vote-form">
                     <input type="hidden" name="lawId" value="<%= law.getId() %>">
