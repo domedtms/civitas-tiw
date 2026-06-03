@@ -135,8 +135,9 @@ password: Password123
 
 - Dashboard dello stato della nazione
 - Endpoint JSON consultabili via JavaScript/AJAX
+- generazione automatica di giornale nazionale periodico;
 
 ## Stato progetto
 
-Versione iniziale: v2.0.0 
-Fase corrente: Level 2 Release
+Ultima versione: v3.0.0
+Fase corrente: Final release

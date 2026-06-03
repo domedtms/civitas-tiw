@@ -1,5 +1,10 @@
 USE civitas_db;
 
+-- ==================================================
+-- CIVITAS SEED DATA
+-- Final Project Release — v3.0.0
+-- ==================================================
+
 -- 1. Users
 INSERT INTO users (id, username, email, password_hash)
 VALUES
@@ -33,7 +38,7 @@ VALUES
         1,
         'Repubblica del Caffè',
         'Un espresso, un voto',
-        'Micro-nazione dimostrativa usata per validare il Livello 2 di Civitas.',
+        'Micro-nazione dimostrativa usata per validare il progetto Civitas completo.',
         '☕',
         1
     )
@@ -62,7 +67,30 @@ ON DUPLICATE KEY UPDATE
     culture_points = VALUES(culture_points),
     energy_points = VALUES(energy_points);
 
--- 5. Laws
+-- 5. Announcements
+INSERT INTO announcements (id, nation_id, author_id, title, content)
+VALUES
+    (
+        1,
+        1,
+        1,
+        'Apertura dell’assemblea nazionale',
+        'La Repubblica del Caffè apre ufficialmente la propria assemblea nazionale simbolica.'
+    ),
+    (
+        2,
+        1,
+        3,
+        'Comunicazione del Ministero del Caffè',
+        'Il ministero invita tutti i cittadini a partecipare alle prossime votazioni legislative.'
+    )
+ON DUPLICATE KEY UPDATE
+    nation_id = VALUES(nation_id),
+    author_id = VALUES(author_id),
+    title = VALUES(title),
+    content = VALUES(content);
+
+-- 6. Laws
 INSERT INTO laws (id, nation_id, proposer_id, title, description, status, closed_at)
 VALUES
     (
@@ -84,12 +112,14 @@ VALUES
         NULL
     )
 ON DUPLICATE KEY UPDATE
+    nation_id = VALUES(nation_id),
+    proposer_id = VALUES(proposer_id),
     title = VALUES(title),
     description = VALUES(description),
     status = VALUES(status),
     closed_at = VALUES(closed_at);
 
--- 6. Votes
+-- 7. Votes
 INSERT INTO votes (law_id, user_id, vote_value)
 VALUES
     (1, 1, 'YES'),
@@ -100,10 +130,11 @@ VALUES
 ON DUPLICATE KEY UPDATE
     vote_value = VALUES(vote_value);
 
--- 7. Decision logs
-INSERT INTO decision_logs (nation_id, law_id, actor_id, action, description)
+-- 8. Decision logs
+INSERT INTO decision_logs (id, nation_id, law_id, actor_id, action, description)
 VALUES
     (
+        1,
         1,
         1,
         1,
@@ -111,6 +142,7 @@ VALUES
         'Seed event: law proposed.'
     ),
     (
+        2,
         1,
         1,
         1,
@@ -118,6 +150,7 @@ VALUES
         'Seed event: law approved.'
     ),
     (
+        3,
         1,
         1,
         NULL,
@@ -125,9 +158,63 @@ VALUES
         'Seed event: resources updated after law approval.'
     ),
     (
+        4,
         1,
         NULL,
         1,
         'ROLE_UPDATED',
         'Seed event: user promoted to minister.'
-    );
+    ),
+    (
+        5,
+        1,
+        NULL,
+        1,
+        'RESOURCE_UPDATED',
+        'Seed event: resources updated after official announcement.'
+    )
+ON DUPLICATE KEY UPDATE
+    nation_id = VALUES(nation_id),
+    law_id = VALUES(law_id),
+    actor_id = VALUES(actor_id),
+    action = VALUES(action),
+    description = VALUES(description);
+
+-- 9. National newspapers
+INSERT INTO national_newspapers (
+    id,
+    nation_id,
+    generated_by,
+    period,
+    title,
+    editorial,
+    political_summary,
+    resources_summary,
+    legislative_summary,
+    announcements_summary,
+    historical_summary
+)
+VALUES (
+    1,
+    1,
+    1,
+    '2026-06',
+    'Giornale Nazionale della Repubblica del Caffè — 2026-06',
+    'Edizione dimostrativa del giornale nazionale generato automaticamente per la Repubblica del Caffè.',
+    'Il quadro politico mostra una micro-nazione attiva, con leggi proposte, votazioni e decisioni istituzionali registrate.',
+    'Le risorse simboliche indicano una fase di sviluppo civico, con coins, cultura ed energia utilizzati per rappresentare lo stato della nazione.',
+    'L’attività legislativa comprende proposte e approvazioni che mostrano il funzionamento del processo decisionale.',
+    'I comunicati ufficiali dimostrano la presenza di comunicazione istituzionale da parte degli organi della micro-nazione.',
+    'Lo storico decisionale registra eventi rilevanti come proposte di legge, approvazioni, aggiornamenti risorse e modifiche di ruolo.'
+)
+ON DUPLICATE KEY UPDATE
+    nation_id = VALUES(nation_id),
+    generated_by = VALUES(generated_by),
+    period = VALUES(period),
+    title = VALUES(title),
+    editorial = VALUES(editorial),
+    political_summary = VALUES(political_summary),
+    resources_summary = VALUES(resources_summary),
+    legislative_summary = VALUES(legislative_summary),
+    announcements_summary = VALUES(announcements_summary),
+    historical_summary = VALUES(historical_summary);
