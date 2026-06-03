@@ -35,6 +35,7 @@ CREATE TABLE nations (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT uq_nations_name UNIQUE (name),
+
     CONSTRAINT fk_nations_founder
         FOREIGN KEY (founder_id)
         REFERENCES users(id)
@@ -174,21 +175,37 @@ CREATE TABLE decision_logs (
 CREATE TABLE national_newspapers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nation_id INT NOT NULL,
+    generated_by INT NOT NULL,
+    period VARCHAR(7) NOT NULL,
     title VARCHAR(150) NOT NULL,
-    period_start DATE NOT NULL,
-    period_end DATE NOT NULL,
-    content TEXT NOT NULL,
-    generated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    editorial TEXT NOT NULL,
+    political_summary TEXT NOT NULL,
+    resources_summary TEXT NOT NULL,
+    legislative_summary TEXT NOT NULL,
+    announcements_summary TEXT NOT NULL,
+    historical_summary TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_national_newspapers_nation
+    CONSTRAINT uq_newspaper_nation_period UNIQUE (nation_id, period),
+
+    CONSTRAINT fk_newspaper_nation
         FOREIGN KEY (nation_id)
         REFERENCES nations(id)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_newspaper_generated_by
+        FOREIGN KEY (generated_by)
+        REFERENCES users(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
 );
 
-CREATE INDEX idx_memberships_user_id ON memberships(user_id);
-CREATE INDEX idx_memberships_nation_id ON memberships(nation_id);
+CREATE INDEX idx_memberships_user_id
+    ON memberships(user_id);
+
+CREATE INDEX idx_memberships_nation_id
+    ON memberships(nation_id);
 
 CREATE INDEX idx_announcements_nation_created
     ON announcements(nation_id, created_at);
@@ -202,5 +219,5 @@ CREATE INDEX idx_votes_law_id
 CREATE INDEX idx_decision_logs_nation_created
     ON decision_logs(nation_id, created_at);
 
-CREATE INDEX idx_national_newspapers_nation_generated
-    ON national_newspapers(nation_id, generated_at);
+CREATE INDEX idx_national_newspapers_nation_created
+    ON national_newspapers(nation_id, created_at);
