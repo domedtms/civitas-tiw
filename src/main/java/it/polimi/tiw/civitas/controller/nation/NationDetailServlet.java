@@ -1,17 +1,17 @@
 package it.polimi.tiw.civitas.controller.nation;
 
 import it.polimi.tiw.civitas.dao.AnnouncementDAO;
+import it.polimi.tiw.civitas.dao.LawDAO;
 import it.polimi.tiw.civitas.dao.MembershipDAO;
 import it.polimi.tiw.civitas.dao.NationDAO;
+import it.polimi.tiw.civitas.dao.NationResourceDAO;
 import it.polimi.tiw.civitas.model.Announcement;
 import it.polimi.tiw.civitas.model.Citizen;
+import it.polimi.tiw.civitas.model.Law;
 import it.polimi.tiw.civitas.model.MembershipRole;
 import it.polimi.tiw.civitas.model.Nation;
-import it.polimi.tiw.civitas.model.User;
-import it.polimi.tiw.civitas.dao.LawDAO;
-import it.polimi.tiw.civitas.model.Law;
-import it.polimi.tiw.civitas.dao.NationResourceDAO;
 import it.polimi.tiw.civitas.model.NationResources;
+import it.polimi.tiw.civitas.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,6 +35,7 @@ public class NationDetailServlet extends HttpServlet {
     private AnnouncementDAO announcementDAO;
     private LawDAO lawDAO;
     private NationResourceDAO nationResourceDAO;
+
     @Override
     public void init() {
         this.nationDAO = new NationDAO();
@@ -57,21 +58,24 @@ public class NationDetailServlet extends HttpServlet {
 
         try {
             Optional<Nation> nationOptional = nationDAO.findById(nationId);
-            NationResources resources = nationResourceDAO.findByNationId(nationId).orElse(null);
 
             if (nationOptional.isEmpty()) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
 
+            Nation nation = nationOptional.get();
+
             List<Citizen> citizens = membershipDAO.findCitizensByNationId(nationId);
             List<Announcement> announcements = announcementDAO.findByNationId(nationId);
             List<Law> laws = lawDAO.findByNationId(nationId);
+            NationResources resources = nationResourceDAO.findByNationId(nationId).orElse(null);
 
             User loggedUser = getLoggedUser(request);
 
             boolean currentUserMember = false;
             boolean canCreateAnnouncement = false;
+            boolean canGenerateNewspaper = false;
             boolean canManageRoles = false;
 
             if (loggedUser != null) {
@@ -84,21 +88,29 @@ public class NationDetailServlet extends HttpServlet {
                         .map(role -> role == MembershipRole.FOUNDER || role == MembershipRole.MINISTER)
                         .orElse(false);
 
+                canGenerateNewspaper = roleOptional
+                        .map(role -> role == MembershipRole.FOUNDER || role == MembershipRole.MINISTER)
+                        .orElse(false);
+
                 canManageRoles = roleOptional
                         .map(role -> role == MembershipRole.FOUNDER)
                         .orElse(false);
             }
 
-            request.setAttribute("nation", nationOptional.get());
+            request.setAttribute("nation", nation);
             request.setAttribute("citizens", citizens);
             request.setAttribute("announcements", announcements);
-            request.setAttribute("currentUserMember", currentUserMember);
-            request.setAttribute("canCreateAnnouncement", canCreateAnnouncement);
-            request.setAttribute("canManageRoles", canManageRoles);
-            request.setAttribute("joinError", request.getParameter("joinError"));
-            request.setAttribute("roleError", request.getParameter("roleError"));
             request.setAttribute("laws", laws);
             request.setAttribute("resources", resources);
+
+            request.setAttribute("currentUserMember", currentUserMember);
+            request.setAttribute("canCreateAnnouncement", canCreateAnnouncement);
+            request.setAttribute("canGenerateNewspaper", canGenerateNewspaper);
+            request.setAttribute("canManageRoles", canManageRoles);
+
+            request.setAttribute("joinError", request.getParameter("joinError"));
+            request.setAttribute("roleError", request.getParameter("roleError"));
+            request.setAttribute("newspaperSuccess", request.getParameter("newspaperSuccess"));
 
             request.getRequestDispatcher(NATION_DETAIL_VIEW).forward(request, response);
 
