@@ -101,6 +101,10 @@ Founder
 email: founder@test.it
 password: Password123
 
+Minister
+email: minister@test.it
+password: Password123
+
 Citizen
 email: citizen@test.it
 password: Password123
@@ -134,5 +138,5 @@ password: Password123
 
 ## Stato progetto
 
-Versione iniziale: v0.1  
-Fase corrente: setup repository e progettazione architetturale.
+Versione iniziale: v2.0.0 
+Fase corrente: Level 2 Release
