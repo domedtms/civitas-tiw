@@ -20,6 +20,9 @@
             <a class="button secondary" href="<%= request.getContextPath() %>/nation?id=<%= nation.getId() %>">
                 Torna alla micro-nazione
             </a>
+            <a class="button secondary" href="<%= request.getContextPath() %>/nation/newspapers?nationId=<%= nation.getId() %>">
+                Giornali
+            </a>
             <a class="button secondary" href="<%= request.getContextPath() %>/nations">
                 Micro-nazioni
             </a>

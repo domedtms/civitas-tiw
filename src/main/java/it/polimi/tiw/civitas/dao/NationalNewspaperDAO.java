@@ -9,6 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class NationalNewspaperDAO {
 
@@ -72,6 +75,59 @@ public class NationalNewspaperDAO {
                 return resultSet.next() && resultSet.getInt("total") > 0;
             }
         }
+    }
+
+    public Optional<NationalNewspaper> findById(int id) throws SQLException {
+        String sql = """
+                SELECT id, nation_id, generated_by, period, title,
+                       editorial, political_summary, resources_summary,
+                       legislative_summary, announcements_summary, historical_summary,
+                       created_at
+                FROM national_newspapers
+                WHERE id = ?
+                """;
+
+        try (Connection connection = ConnectionHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(mapNationalNewspaper(resultSet));
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public List<NationalNewspaper> findByNationId(int nationId) throws SQLException {
+        String sql = """
+                SELECT id, nation_id, generated_by, period, title,
+                       editorial, political_summary, resources_summary,
+                       legislative_summary, announcements_summary, historical_summary,
+                       created_at
+                FROM national_newspapers
+                WHERE nation_id = ?
+                ORDER BY period DESC, created_at DESC
+                """;
+
+        List<NationalNewspaper> newspapers = new ArrayList<>();
+
+        try (Connection connection = ConnectionHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, nationId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    newspapers.add(mapNationalNewspaper(resultSet));
+                }
+            }
+        }
+
+        return newspapers;
     }
 
     private NationalNewspaper mapNationalNewspaper(ResultSet resultSet) throws SQLException {

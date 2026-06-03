@@ -535,3 +535,52 @@ code {
     border-radius: 12px;
     line-height: 1.7;
 }
+.newspaper-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.newspaper-card {
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+}
+
+.newspaper-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.newspaper-card h2 {
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+
+.newspaper-card p {
+    line-height: 1.6;
+}
+
+.newspaper-detail h1 {
+    margin-bottom: 10px;
+}
+
+.newspaper-section {
+    margin-top: 28px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+}
+
+.newspaper-section h2 {
+    margin-top: 0;
+}
+
+.newspaper-section p {
+    line-height: 1.8;
+}

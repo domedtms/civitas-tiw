@@ -1,10 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="it.polimi.tiw.civitas.model.Nation" %>
 <%@ page import="it.polimi.tiw.civitas.util.HtmlUtil" %>
+<%@ page import="java.time.YearMonth" %>
 <%
     Nation nation = (Nation) request.getAttribute("nation");
     String error = (String) request.getAttribute("error");
     String period = (String) request.getAttribute("period");
+    String currentPeriod = YearMonth.now().toString();
 %>
 <!DOCTYPE html>
 <html lang="it">
@@ -43,6 +45,7 @@
                    type="month"
                    name="period"
                    required
+                   max="<%= HtmlUtil.escape(currentPeriod) %>"
                    value="<%= HtmlUtil.escape(period) %>">
 
             <button type="submit">Genera giornale</button>

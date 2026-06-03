@@ -51,6 +51,9 @@
             <a class="button secondary" href="<%= request.getContextPath() %>/nation/history?id=<%= nation.getId() %>">
                 Storico decisionale
             </a>
+            <a class="button secondary" href="<%= request.getContextPath() %>/nation/newspapers?nationId=<%= nation.getId() %>">
+                Giornali
+            </a>
 
             <% if (canGenerateNewspaper) { %>
                 <a class="button secondary" href="<%= request.getContextPath() %>/nation/newspapers/generate?nationId=<%= nation.getId() %>">
