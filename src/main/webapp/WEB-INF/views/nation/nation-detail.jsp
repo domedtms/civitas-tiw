@@ -4,25 +4,26 @@
 <%@ page import="it.polimi.tiw.civitas.model.User" %>
 <%@ page import="it.polimi.tiw.civitas.model.Announcement" %>
 <%@ page import="it.polimi.tiw.civitas.model.Law" %>
-<%@ page import="it.polimi.tiw.civitas.util.HtmlUtil" %>
 <%@ page import="it.polimi.tiw.civitas.model.NationResources" %>
+<%@ page import="it.polimi.tiw.civitas.util.HtmlUtil" %>
 <%@ page import="java.util.List" %>
 <%
     Nation nation = (Nation) request.getAttribute("nation");
     List<Citizen> citizens = (List<Citizen>) request.getAttribute("citizens");
     List<Announcement> announcements = (List<Announcement>) request.getAttribute("announcements");
     List<Law> laws = (List<Law>) request.getAttribute("laws");
+    NationResources resources = (NationResources) request.getAttribute("resources");
 
     User loggedUser = (User) session.getAttribute("loggedUser");
 
     boolean currentUserMember = Boolean.TRUE.equals(request.getAttribute("currentUserMember"));
     boolean canCreateAnnouncement = Boolean.TRUE.equals(request.getAttribute("canCreateAnnouncement"));
+    boolean canGenerateNewspaper = Boolean.TRUE.equals(request.getAttribute("canGenerateNewspaper"));
     boolean canManageRoles = Boolean.TRUE.equals(request.getAttribute("canManageRoles"));
 
     String joinError = (String) request.getAttribute("joinError");
     String roleError = (String) request.getAttribute("roleError");
-
-    NationResources resources = (NationResources) request.getAttribute("resources");
+    String newspaperSuccess = (String) request.getAttribute("newspaperSuccess");
 %>
 <!DOCTYPE html>
 <html lang="it">
@@ -35,14 +36,27 @@
 <main class="page-container">
     <section class="home-card">
         <div class="actions">
-            <a class="button secondary" href="<%= request.getContextPath() %>/nations">Torna alle micro-nazioni</a>
-            <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">Home</a>
+            <a class="button secondary" href="<%= request.getContextPath() %>/nations">
+                Torna alle micro-nazioni
+            </a>
+
+            <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">
+                Home
+            </a>
+
             <a class="button secondary" href="<%= request.getContextPath() %>/nation/dashboard?id=<%= nation.getId() %>">
                 Dashboard
             </a>
+
             <a class="button secondary" href="<%= request.getContextPath() %>/nation/history?id=<%= nation.getId() %>">
                 Storico decisionale
             </a>
+
+            <% if (canGenerateNewspaper) { %>
+                <a class="button secondary" href="<%= request.getContextPath() %>/nation/newspapers/generate?nationId=<%= nation.getId() %>">
+                    Genera giornale
+                </a>
+            <% } %>
         </div>
 
         <h1>
@@ -68,6 +82,12 @@
             <div class="alert alert-error"><%= HtmlUtil.escape(roleError) %></div>
         <% } %>
 
+        <% if ("1".equals(newspaperSuccess)) { %>
+            <div class="alert">
+                Giornale nazionale generato correttamente.
+            </div>
+        <% } %>
+
         <div class="join-panel">
             <% if (loggedUser == null) { %>
                 <p class="muted">Accedi per unirti a questa micro-nazione.</p>
@@ -81,7 +101,8 @@
                 </form>
             <% } %>
         </div>
-                <hr>
+
+        <hr>
 
         <section>
             <h2>Risorse simboliche</h2>
@@ -194,7 +215,7 @@
                 <p class="muted">
                     Come fondatore puoi promuovere cittadini a ministri o rimuovere il ruolo di ministro.
                 </p>
-                <% } %>
+            <% } %>
 
             <% if (citizens == null || citizens.isEmpty()) { %>
                 <p class="muted">Non ci sono ancora cittadini registrati.</p>
@@ -206,6 +227,7 @@
                             <th>Username</th>
                             <th>Ruolo</th>
                             <th>Ingresso</th>
+
                             <% if (canManageRoles) { %>
                                 <th>Azioni</th>
                             <% } %>
@@ -214,7 +236,7 @@
 
                         <tbody>
                         <% for (Citizen citizen : citizens) { %>
-                                    <tr>
+                            <tr>
                                 <td><%= HtmlUtil.escape(citizen.getUsername()) %></td>
 
                                 <td><%= HtmlUtil.escape(citizen.getRole().name()) %></td>
