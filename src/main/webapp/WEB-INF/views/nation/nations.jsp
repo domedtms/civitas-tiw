@@ -58,6 +58,9 @@
                     <a class="button secondary" href="<%= request.getContextPath() %>/nation?id=<%= nation.getId() %>">
                         Apri scheda
                     </a>
+                    <a class="button secondary" href="<%= request.getContextPath() %>/nation/dashboard?id=<%= nation.getId() %>">
+                        Dashboard
+                    </a>
                 </article>
             <% } %>
         <% } %>
