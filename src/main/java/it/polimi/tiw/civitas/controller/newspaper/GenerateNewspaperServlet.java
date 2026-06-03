@@ -96,8 +96,8 @@ public class GenerateNewspaperServlet extends HttpServlet {
         String period = request.getParameter("period");
 
         try {
-            nationalNewspaperService.generateNewspaper(nationId, loggedUser.getId(), period);
-            response.sendRedirect(request.getContextPath() + "/nation?id=" + nationId + "&newspaperSuccess=1");
+            int newspaperId = nationalNewspaperService.generateNewspaper(nationId, loggedUser.getId(), period);
+            response.sendRedirect(request.getContextPath() + "/nation/newspaper?id=" + newspaperId);
 
         } catch (NewspaperGenerationException e) {
             preserveFormValues(request, nationId, period);
