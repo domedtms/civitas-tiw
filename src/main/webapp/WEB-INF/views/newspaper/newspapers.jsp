@@ -37,7 +37,7 @@
         </div>
 
         <h1>
-            Giornali nazionali —
+            Giornali nazionali -
             <%= HtmlUtil.escape(nation.getFlagSymbol()) %>
             <%= HtmlUtil.escape(nation.getName()) %>
         </h1>
@@ -45,11 +45,18 @@
         <p class="muted">
             Archivio dei giornali generati automaticamente dal sistema per questa micro-nazione.
         </p>
+        <p class="muted">
+            Ogni giornale appartiene a un periodo mensile e viene costruito automaticamente a partire da leggi,
+            comunicati, risorse simboliche e storico decisionale.
+        </p>
 
         <hr>
 
         <% if (newspapers == null || newspapers.isEmpty()) { %>
-            <p class="muted">Non sono ancora presenti giornali nazionali.</p>
+            <p class="muted">
+                Non sono ancora presenti giornali nazionali.
+                Un founder o un ministro può generarne uno scegliendo un periodo valido.
+            </p>
 
             <% if (canGenerateNewspaper) { %>
                 <a class="button" href="<%= request.getContextPath() %>/nation/newspapers/generate?nationId=<%= nation.getId() %>">
