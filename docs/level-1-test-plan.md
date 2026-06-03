@@ -1,4 +1,4 @@
-# Manual Tests — Level 1
+# Manual Tests - Level 1
 
 ## 1. Obiettivo
 

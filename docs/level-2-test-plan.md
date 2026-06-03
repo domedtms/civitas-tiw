@@ -1,4 +1,4 @@
-# Level 2 Test Plan — Civitas
+# Level 2 Test Plan - Civitas
 
 ## 1. Ambiente
 - Java 17
