@@ -457,3 +457,36 @@ code {
     padding: 7px 10px;
     font-size: 12px;
 }
+
+.status-proposed {
+    background: #f1ede5;
+    color: #4b4135;
+}
+
+.status-approved {
+    background: #e8f4ea;
+    color: #1f6b35;
+}
+
+.status-rejected {
+    background: #ffe9e9;
+    color: #8a1f1f;
+}
+
+.status-repealed {
+    background: #eee;
+    color: #555;
+}
+
+.workflow-panel .badge,
+.vote-panel .badge {
+    margin-top: 8px;
+}
+
+.data-table form {
+    margin: 0;
+}
+
+.page-container .actions {
+    margin-bottom: 16px;
+}

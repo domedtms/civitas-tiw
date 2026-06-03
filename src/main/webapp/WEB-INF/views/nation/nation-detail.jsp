@@ -130,7 +130,9 @@
                         <article class="law-card">
                             <div class="law-card-header">
                                 <h3><%= HtmlUtil.escape(law.getTitle()) %></h3>
-                                <span class="status-pill"><%= HtmlUtil.escape(law.getStatus().name()) %></span>
+                                <span class="status-pill status-<%= law.getStatus().name().toLowerCase() %>">
+                                    <%= HtmlUtil.escape(law.getStatus().name()) %>
+                                </span>
                             </div>
 
                             <p class="muted"><%= HtmlUtil.escape(law.getDescription()) %></p>
@@ -184,6 +186,12 @@
 
         <section>
             <h2>Cittadini</h2>
+
+            <% if (canManageRoles) { %>
+                <p class="muted">
+                    Come fondatore puoi promuovere cittadini a ministri o rimuovere il ruolo di ministro.
+                </p>
+                <% } %>
 
             <% if (citizens == null || citizens.isEmpty()) { %>
                 <p class="muted">Non ci sono ancora cittadini registrati.</p>
