@@ -10,6 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorElement = document.getElementById("dashboard-error");
     const contentElement = document.getElementById("dashboard-content");
 
+    if (!apiUrl) {
+        showError(loadingElement, errorElement, contentElement);
+        return;
+    }
+
     fetch(apiUrl, {
         method: "GET",
         headers: {
@@ -31,11 +36,23 @@ document.addEventListener("DOMContentLoaded", function () {
             contentElement.classList.remove("hidden");
         })
         .catch(function () {
-            loadingElement.classList.add("hidden");
-            contentElement.classList.add("hidden");
-            errorElement.classList.remove("hidden");
+            showError(loadingElement, errorElement, contentElement);
         });
 });
+
+function showError(loadingElement, errorElement, contentElement) {
+    if (loadingElement) {
+        loadingElement.classList.add("hidden");
+    }
+
+    if (contentElement) {
+        contentElement.classList.add("hidden");
+    }
+
+    if (errorElement) {
+        errorElement.classList.remove("hidden");
+    }
+}
 
 function updateDashboard(stats) {
     setText("citizensCount", stats.citizensCount);
@@ -63,15 +80,19 @@ function updateDashboard(stats) {
 function setText(elementId, value) {
     const element = document.getElementById(elementId);
 
-    if (element) {
-        element.textContent = value;
+    if (!element) {
+        return;
     }
+
+    element.textContent = value !== undefined && value !== null ? value : "-";
 }
 
 function buildSummary(stats) {
     const parts = [];
 
-    if (stats.approvedLawsCount > stats.rejectedLawsCount) {
+    if (stats.lawsCount === 0) {
+        parts.push("La micro-nazione è ancora in una fase legislativa iniziale: non risultano leggi registrate.");
+    } else if (stats.approvedLawsCount > stats.rejectedLawsCount) {
         parts.push("La micro-nazione mostra una fase legislativa positiva, con più leggi approvate che respinte.");
     } else if (stats.rejectedLawsCount > stats.approvedLawsCount) {
         parts.push("La micro-nazione attraversa una fase di maggiore conflitto decisionale, con più leggi respinte che approvate.");

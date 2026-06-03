@@ -51,6 +51,11 @@
             </p>
         <% } %>
 
+        <div class="newspaper-notice">
+            Questo giornale è stato generato automaticamente dal sistema usando dati reali della micro-nazione:
+            leggi, comunicati, risorse simboliche, ruoli e storico decisionale.
+        </div>
+
         <hr>
 
         <section class="newspaper-section">

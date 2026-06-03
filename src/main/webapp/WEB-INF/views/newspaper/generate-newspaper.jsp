@@ -48,6 +48,11 @@
                    max="<%= HtmlUtil.escape(currentPeriod) %>"
                    value="<%= HtmlUtil.escape(period) %>">
 
+            <p class="muted form-help">
+                Puoi generare un giornale per il mese corrente o per mesi precedenti.
+                Non è consentita la generazione per periodi futuri.
+            </p>
+
             <button type="submit">Genera giornale</button>
         </form>
 

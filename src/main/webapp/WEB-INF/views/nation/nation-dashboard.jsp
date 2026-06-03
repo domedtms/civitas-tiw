@@ -32,7 +32,7 @@
         </div>
 
         <h1>
-            Dashboard —
+            Dashboard -
             <%= HtmlUtil.escape(nation.getFlagSymbol()) %>
             <%= HtmlUtil.escape(nation.getName()) %>
         </h1>

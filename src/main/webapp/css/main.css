@@ -584,3 +584,31 @@ code {
 .newspaper-section p {
     line-height: 1.8;
 }
+
+.form-help {
+    margin-top: -8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.newspaper-notice {
+    margin-top: 18px;
+    padding: 16px;
+    background: #f8f5ef;
+    border: 1px solid #ddd7cc;
+    border-radius: 12px;
+    line-height: 1.6;
+    color: #4b4135;
+}
+
+.dashboard-card.highlight-card strong {
+    font-size: 34px;
+}
+
+#dashboard-loading {
+    margin-top: 20px;
+}
+
+#dashboard-error {
+    margin-top: 20px;
+}
