@@ -37,6 +37,9 @@
         <div class="actions">
             <a class="button secondary" href="<%= request.getContextPath() %>/nations">Torna alle micro-nazioni</a>
             <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">Home</a>
+            <a class="button secondary" href="<%= request.getContextPath() %>/nation/dashboard?id=<%= nation.getId() %>">
+                Dashboard
+            </a>
             <a class="button secondary" href="<%= request.getContextPath() %>/nation/history?id=<%= nation.getId() %>">
                 Storico decisionale
             </a>
