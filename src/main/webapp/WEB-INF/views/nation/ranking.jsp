@@ -30,6 +30,11 @@
             coins + culture + energy + approved_laws × 5 + citizens × 2
         </div>
 
+        <p class="muted">
+            I coins, la cultura e l'energia derivano dalle decisioni politiche della micro-nazione:
+            leggi approvate, respinte, abrogate e comunicati ufficiali.
+        </p>
+
         <hr>
 
         <% if (ranking == null || ranking.isEmpty()) { %>
