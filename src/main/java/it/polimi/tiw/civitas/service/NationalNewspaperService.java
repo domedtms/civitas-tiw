@@ -115,11 +115,18 @@ public class NationalNewspaperService {
     }
 
     private String normalizePeriod(String period) throws NewspaperGenerationException {
-        String normalizedPeriod = period.trim();
+    String normalizedPeriod = period.trim();
 
         try {
-            YearMonth.parse(normalizedPeriod);
+            YearMonth selectedPeriod = YearMonth.parse(normalizedPeriod);
+            YearMonth currentPeriod = YearMonth.now();
+
+            if (selectedPeriod.isAfter(currentPeriod)) {
+                throw new NewspaperGenerationException("You cannot generate a newspaper for a future period.");
+            }
+
             return normalizedPeriod;
+
         } catch (DateTimeParseException e) {
             throw new NewspaperGenerationException("Period must use YYYY-MM format.");
         }
