@@ -45,13 +45,13 @@ public class AnnouncementService {
         validateInput(nationId, authorId, normalizedTitle, normalizedContent);
 
         if (nationDAO.findById(nationId).isEmpty()) {
-            throw new AnnouncementException("Nation not found.");
+            throw new AnnouncementException("Micro-nazione non trovata.");
         }
 
         boolean authorized = canCreateAnnouncement(authorId, nationId);
 
         if (!authorized) {
-            throw new AnnouncementException("You are not authorized to publish official announcements.");
+            throw new AnnouncementException("Non sei autorizzato a pubblicare comunicati ufficiali.");
         }
 
         Announcement announcement = new Announcement();
@@ -75,7 +75,7 @@ public class AnnouncementService {
                 resourceLog.setLawId(null);
                 resourceLog.setActorId(authorId);
                 resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
-                resourceLog.setDescription("Resources updated after official announcement: coins +3, culture +2.");
+                resourceLog.setDescription("Risorse aggiornate dopo il comunicato ufficiale: monete +3, cultura +2.");
 
                 decisionLogDAO.create(connection, resourceLog);
 
@@ -109,19 +109,19 @@ public class AnnouncementService {
             throws AnnouncementException {
 
         if (nationId <= 0) {
-            throw new AnnouncementException("Invalid nation.");
+            throw new AnnouncementException("Micro-nazione non valida.");
         }
 
         if (authorId <= 0) {
-            throw new AnnouncementException("Invalid author.");
+            throw new AnnouncementException("Autore non valido.");
         }
 
         if (isBlank(title) || title.length() < MIN_TITLE_LENGTH || title.length() > MAX_TITLE_LENGTH) {
-            throw new AnnouncementException("Title must contain between 3 and 120 characters.");
+            throw new AnnouncementException("Il titolo deve contenere tra 3 e 120 caratteri.");
         }
 
         if (isBlank(content) || content.length() < MIN_CONTENT_LENGTH || content.length() > MAX_CONTENT_LENGTH) {
-            throw new AnnouncementException("Content must contain between 10 and 5000 characters.");
+            throw new AnnouncementException("Il contenuto deve contenere tra 10 e 5000 caratteri.");
         }
     }
 

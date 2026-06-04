@@ -44,7 +44,7 @@ public class NationService {
                 connection.setAutoCommit(false);
 
                 if (nationDAO.existsByName(connection, normalizedName)) {
-                    throw new NationException("A nation with this name already exists.");
+                    throw new NationException("Esiste già una micro-nazione con questo nome.");
                 }
 
                 Nation nation = new Nation();
@@ -76,23 +76,23 @@ public class NationService {
             throws NationException {
 
         if (founderId <= 0) {
-            throw new NationException("Invalid founder.");
+            throw new NationException("Fondatore non valido.");
         }
 
         if (isBlank(name) || name.length() < MIN_NAME_LENGTH || name.length() > MAX_NAME_LENGTH) {
-            throw new NationException("Nation name must contain between 3 and 100 characters.");
+            throw new NationException("Il nome della micro-nazione deve contenere tra 3 e 100 caratteri.");
         }
 
         if (motto != null && motto.length() > MAX_MOTTO_LENGTH) {
-            throw new NationException("Motto must contain at most 150 characters.");
+            throw new NationException("Il motto deve contenere al massimo 150 caratteri.");
         }
 
         if (flagSymbol != null && flagSymbol.length() > MAX_FLAG_LENGTH) {
-            throw new NationException("Flag symbol must contain at most 20 characters.");
+            throw new NationException("La bandiera testuale deve contenere al massimo 20 caratteri.");
         }
 
         if (description != null && description.length() > MAX_DESCRIPTION_LENGTH) {
-            throw new NationException("Description must contain at most 3000 characters.");
+            throw new NationException("La descrizione deve contenere al massimo 3000 caratteri.");
         }
     }
 

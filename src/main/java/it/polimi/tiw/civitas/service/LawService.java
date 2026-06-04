@@ -53,11 +53,11 @@ public class LawService {
         validateInput(nationId, proposerId, normalizedTitle, normalizedDescription);
 
         if (nationDAO.findById(nationId).isEmpty()) {
-            throw new LawException("Nation not found.");
+            throw new LawException("Micro-nazione non trovata.");
         }
 
         if (!membershipDAO.existsByUserAndNation(proposerId, nationId)) {
-            throw new LawException("Only citizens of this nation can propose laws.");
+            throw new LawException("Solo i cittadini di questa micro-nazione possono proporre leggi.");
         }
 
         try (Connection connection = ConnectionHandler.getConnection()) {
@@ -80,7 +80,7 @@ public class LawService {
                 decisionLog.setLawId(lawId);
                 decisionLog.setActorId(proposerId);
                 decisionLog.setAction(DecisionLogAction.LAW_PROPOSED);
-                decisionLog.setDescription("A new law was proposed: " + normalizedTitle);
+                decisionLog.setDescription("Nuova legge proposta: " + normalizedTitle);
 
                 decisionLogDAO.create(connection, decisionLog);
 
@@ -101,19 +101,19 @@ public class LawService {
             throws LawException {
 
         if (nationId <= 0) {
-            throw new LawException("Invalid nation.");
+            throw new LawException("Micro-nazione non valida.");
         }
 
         if (proposerId <= 0) {
-            throw new LawException("Invalid proposer.");
+            throw new LawException("Proponente non valido.");
         }
 
         if (isBlank(title) || title.length() < MIN_TITLE_LENGTH || title.length() > MAX_TITLE_LENGTH) {
-            throw new LawException("Title must contain between 3 and 120 characters.");
+            throw new LawException("Il titolo deve contenere tra 3 e 120 caratteri.");
         }
 
         if (isBlank(description) || description.length() < MIN_DESCRIPTION_LENGTH || description.length() > MAX_DESCRIPTION_LENGTH) {
-            throw new LawException("Description must contain between 10 and 5000 characters.");
+            throw new LawException("La descrizione deve contenere tra 10 e 5000 caratteri.");
         }
     }
 

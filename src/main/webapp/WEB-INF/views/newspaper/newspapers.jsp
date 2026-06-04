@@ -23,7 +23,7 @@
                 Torna alla micro-nazione
             </a>
             <a class="button secondary" href="<%= request.getContextPath() %>/nation/dashboard?id=<%= nation.getId() %>">
-                Dashboard
+                Cruscotto
             </a>
             <a class="button secondary" href="<%= request.getContextPath() %>/nations">
                 Micro-nazioni
@@ -73,14 +73,14 @@
                                 <p class="muted">
                                     Periodo:
                                     <strong><%= HtmlUtil.escape(newspaper.getPeriod()) %></strong>
-                                    · Generato da utente ID:
+                                    · Generato da ID utente:
                                     <strong><%= newspaper.getGeneratedBy() %></strong>
                                 </p>
                             </div>
 
                             <% if (newspaper.getCreatedAt() != null) { %>
                                 <span class="status-pill">
-                                    <%= HtmlUtil.escape(newspaper.getCreatedAt().toString()) %>
+                                    <%= HtmlUtil.escape(HtmlUtil.formatDateTime(newspaper.getCreatedAt())) %>
                                 </span>
                             <% } %>
                         </div>

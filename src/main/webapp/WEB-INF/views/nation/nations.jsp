@@ -23,7 +23,7 @@
         </div>
 
         <div class="actions">
-            <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">Home</a>
+            <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">Pagina iniziale</a>
             <a class="button secondary" href="<%= request.getContextPath() %>/ranking">Classifica</a>
             <% if (loggedUser != null) { %>
                 <a class="button" href="<%= request.getContextPath() %>/nations/create">Crea micro-nazione</a>
@@ -59,7 +59,7 @@
                         Apri scheda
                     </a>
                     <a class="button secondary" href="<%= request.getContextPath() %>/nation/dashboard?id=<%= nation.getId() %>">
-                        Dashboard
+                        Cruscotto
                     </a>
                 </article>
             <% } %>

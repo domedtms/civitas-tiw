@@ -8,7 +8,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Civitas</title>
+    <title>Accesso - Civitas</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/main.css">
 </head>
 <body>

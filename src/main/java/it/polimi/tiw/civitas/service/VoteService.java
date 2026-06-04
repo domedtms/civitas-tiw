@@ -54,11 +54,11 @@ public class VoteService {
             throws SQLException, VoteException {
 
         if (lawId <= 0) {
-            throw new VoteException("Invalid law.");
+            throw new VoteException("Legge non valida.");
         }
 
         if (userId <= 0) {
-            throw new VoteException("Invalid user.");
+            throw new VoteException("Utente non valido.");
         }
 
         VoteValue voteValue = parseVoteValue(voteValueRaw);
@@ -66,17 +66,17 @@ public class VoteService {
         Optional<Law> lawOptional = lawDAO.findById(lawId);
 
         if (lawOptional.isEmpty()) {
-            throw new VoteException("Law not found.");
+            throw new VoteException("Legge non trovata.");
         }
 
         Law law = lawOptional.get();
 
         if (law.getStatus() != LawStatus.PROPOSED) {
-            throw new VoteException("This law is not open for voting.");
+            throw new VoteException("Questa legge non è aperta al voto.");
         }
 
         if (!membershipDAO.existsByUserAndNation(userId, law.getNationId())) {
-            throw new VoteException("Only citizens of this nation can vote this law.");
+            throw new VoteException("Solo i cittadini di questa micro-nazione possono votare questa legge.");
         }
 
         try (Connection connection = ConnectionHandler.getConnection()) {
@@ -86,7 +86,7 @@ public class VoteService {
                 connection.setAutoCommit(false);
 
                 if (voteDAO.existsByLawAndUser(connection, lawId, userId)) {
-                    throw new VoteException("You have already voted this law.");
+                    throw new VoteException("Hai già votato questa legge.");
                 }
 
                 Vote vote = new Vote();
@@ -100,7 +100,7 @@ public class VoteService {
 
             } catch (SQLIntegrityConstraintViolationException e) {
                 connection.rollback();
-                throw new VoteException("You have already voted this law.");
+                throw new VoteException("Hai già votato questa legge.");
 
             } catch (SQLException | VoteException e) {
                 connection.rollback();
@@ -114,13 +114,13 @@ public class VoteService {
 
     private VoteValue parseVoteValue(String value) throws VoteException {
         if (value == null || value.trim().isEmpty()) {
-            throw new VoteException("Invalid vote value.");
+            throw new VoteException("Valore di voto non valido.");
         }
 
         try {
             return VoteValue.valueOf(value.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new VoteException("Invalid vote value.");
+            throw new VoteException("Valore di voto non valido.");
         }
     }
 }

@@ -41,11 +41,11 @@
             </a>
 
             <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">
-                Home
+                Pagina iniziale
             </a>
 
             <a class="button secondary" href="<%= request.getContextPath() %>/nation/dashboard?id=<%= nation.getId() %>">
-                Dashboard
+                Cruscotto
             </a>
 
             <a class="button secondary" href="<%= request.getContextPath() %>/nation/history?id=<%= nation.getId() %>">
@@ -117,17 +117,17 @@
                 <div class="resource-grid">
                     <article class="resource-card">
                         <strong><%= resources.getCoins() %></strong>
-                        <span>Coins</span>
+                        <span>Monete</span>
                     </article>
 
                     <article class="resource-card">
                         <strong><%= resources.getCulturePoints() %></strong>
-                        <span>Culture</span>
+                        <span>Cultura</span>
                     </article>
 
                     <article class="resource-card">
                         <strong><%= resources.getEnergyPoints() %></strong>
-                        <span>Energy</span>
+                        <span>Energia</span>
                     </article>
                 </div>
             <% } %>
@@ -158,7 +158,7 @@
                             <div class="law-card-header">
                                 <h3><%= HtmlUtil.escape(law.getTitle()) %></h3>
                                 <span class="status-pill status-<%= law.getStatus().name().toLowerCase() %>">
-                                    <%= HtmlUtil.escape(law.getStatus().name()) %>
+                                    <%= HtmlUtil.escape(HtmlUtil.label(law.getStatus())) %>
                                 </span>
                             </div>
 
@@ -198,9 +198,9 @@
                             <h3><%= HtmlUtil.escape(announcement.getTitle()) %></h3>
                             <p><%= HtmlUtil.escape(announcement.getContent()) %></p>
                             <p class="muted">
-                                Autore ID: <%= announcement.getAuthorId() %>
+                                ID autore: <%= announcement.getAuthorId() %>
                                 <% if (announcement.getCreatedAt() != null) { %>
-                                    · <%= HtmlUtil.escape(announcement.getCreatedAt().toString()) %>
+                                    · <%= HtmlUtil.escape(HtmlUtil.formatDateTime(announcement.getCreatedAt())) %>
                                 <% } %>
                             </p>
                         </article>
@@ -227,7 +227,7 @@
                     <table class="data-table">
                         <thead>
                         <tr>
-                            <th>Username</th>
+                            <th>Nome utente</th>
                             <th>Ruolo</th>
                             <th>Ingresso</th>
 
@@ -242,10 +242,10 @@
                             <tr>
                                 <td><%= HtmlUtil.escape(citizen.getUsername()) %></td>
 
-                                <td><%= HtmlUtil.escape(citizen.getRole().name()) %></td>
+                                <td><%= HtmlUtil.escape(HtmlUtil.label(citizen.getRole())) %></td>
 
                                 <td>
-                                    <%= citizen.getJoinedAt() != null ? HtmlUtil.escape(citizen.getJoinedAt().toString()) : "-" %>
+                                    <%= citizen.getJoinedAt() != null ? HtmlUtil.escape(HtmlUtil.formatDateTime(citizen.getJoinedAt())) : "-" %>
                                 </td>
 
                                 <% if (canManageRoles) { %>

@@ -13,6 +13,7 @@ import it.polimi.tiw.civitas.model.MembershipRole;
 import it.polimi.tiw.civitas.model.Nation;
 import it.polimi.tiw.civitas.model.NationStats;
 import it.polimi.tiw.civitas.model.NationalNewspaper;
+import it.polimi.tiw.civitas.util.HtmlUtil;
 
 import java.sql.SQLException;
 import java.time.YearMonth;
@@ -65,21 +66,21 @@ public class NationalNewspaperService {
         Optional<Nation> nationOptional = nationDAO.findById(nationId);
 
         if (nationOptional.isEmpty()) {
-            throw new NewspaperGenerationException("Nation not found.");
+            throw new NewspaperGenerationException("Micro-nazione non trovata.");
         }
 
         if (!canGenerateNewspaper(generatedBy, nationId)) {
-            throw new NewspaperGenerationException("You are not authorized to generate this newspaper.");
+            throw new NewspaperGenerationException("Non sei autorizzato a generare questo giornale.");
         }
 
         if (nationalNewspaperDAO.existsByNationAndPeriod(nationId, normalizedPeriod)) {
-            throw new NewspaperGenerationException("A national newspaper already exists for this period.");
+            throw new NewspaperGenerationException("Esiste già un giornale nazionale per questo periodo.");
         }
 
         Nation nation = nationOptional.get();
 
         NationStats stats = nationStatsService.findStatsByNationId(nationId)
-                .orElseThrow(() -> new NewspaperGenerationException("Nation statistics not available."));
+                .orElseThrow(() -> new NewspaperGenerationException("Statistiche della micro-nazione non disponibili."));
 
         List<Law> laws = lawDAO.findByNationId(nationId);
         List<Announcement> announcements = announcementDAO.findByNationId(nationId);
@@ -102,15 +103,15 @@ public class NationalNewspaperService {
             throws NewspaperGenerationException {
 
         if (nationId <= 0) {
-            throw new NewspaperGenerationException("Invalid nation.");
+            throw new NewspaperGenerationException("Micro-nazione non valida.");
         }
 
         if (generatedBy <= 0) {
-            throw new NewspaperGenerationException("Invalid generator.");
+            throw new NewspaperGenerationException("Generatore non valido.");
         }
 
         if (period == null || period.trim().isEmpty()) {
-            throw new NewspaperGenerationException("Period is required.");
+            throw new NewspaperGenerationException("Il periodo è obbligatorio.");
         }
     }
 
@@ -122,13 +123,13 @@ public class NationalNewspaperService {
             YearMonth currentPeriod = YearMonth.now();
 
             if (selectedPeriod.isAfter(currentPeriod)) {
-                throw new NewspaperGenerationException("You cannot generate a newspaper for a future period.");
+                throw new NewspaperGenerationException("Non puoi generare un giornale per un periodo futuro.");
             }
 
             return normalizedPeriod;
 
         } catch (DateTimeParseException e) {
-            throw new NewspaperGenerationException("Period must use YYYY-MM format.");
+            throw new NewspaperGenerationException("Il periodo deve usare il formato YYYY-MM.");
         }
     }
 
@@ -201,7 +202,7 @@ public class NationalNewspaperService {
 
         builder.append("Le risorse simboliche registrano ")
                 .append(stats.getCoins())
-                .append(" coins, ")
+                .append(" monete, ")
                 .append(stats.getCulturePoints())
                 .append(" punti cultura e ")
                 .append(stats.getEnergyPoints())
@@ -251,7 +252,7 @@ public class NationalNewspaperService {
                         .append(law.getTitle())
                         .append("\"")
                         .append(" (")
-                        .append(law.getStatus().name())
+                        .append(HtmlUtil.label(law.getStatus()))
                         .append(")");
             }
 
@@ -311,7 +312,7 @@ public class NationalNewspaperService {
                 builder.append("; ");
             }
 
-            builder.append(log.getAction().name());
+            builder.append(HtmlUtil.label(log.getAction()));
         }
 
         builder.append(".");

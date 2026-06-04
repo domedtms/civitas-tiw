@@ -16,7 +16,7 @@
 <main class="page-container">
     <section class="home-card">
         <div class="actions">
-            <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">Home</a>
+            <a class="button secondary" href="<%= request.getContextPath() %>/index.jsp">Pagina iniziale</a>
             <a class="button secondary" href="<%= request.getContextPath() %>/nations">Micro-nazioni</a>
         </div>
 
@@ -26,12 +26,12 @@
         </p>
 
         <div class="score-formula">
-            <strong>Formula score:</strong>
-            coins + culture + energy + approved_laws × 5 + citizens × 2
+            <strong>Formula punteggio:</strong>
+            monete + cultura + energia + leggi approvate × 5 + cittadini × 2
         </div>
 
         <p class="muted">
-            I coins, la cultura e l'energia derivano dalle decisioni politiche della micro-nazione:
+            Le monete, la cultura e l'energia derivano dalle decisioni politiche della micro-nazione:
             leggi approvate, respinte, abrogate e comunicati ufficiali.
         </p>
 
@@ -48,10 +48,10 @@
                         <th>Micro-nazione</th>
                         <th>Cittadini</th>
                         <th>Leggi approvate</th>
-                        <th>Coins</th>
-                        <th>Culture</th>
-                        <th>Energy</th>
-                        <th>Score</th>
+                        <th>Monete</th>
+                        <th>Cultura</th>
+                        <th>Energia</th>
+                        <th>Punteggio</th>
                     </tr>
                     </thead>
                     <tbody>

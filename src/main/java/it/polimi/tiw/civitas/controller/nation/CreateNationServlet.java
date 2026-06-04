@@ -76,7 +76,7 @@ public class CreateNationServlet extends HttpServlet {
 
         } catch (SQLException e) {
             preserveFormValues(request, name, motto, description, flagSymbol);
-            request.setAttribute("error", "Unexpected error. Please try again later.");
+            request.setAttribute("error", "Errore inatteso. Riprova più tardi.");
             request.getRequestDispatcher(CREATE_NATION_VIEW).forward(request, response);
         }
     }
