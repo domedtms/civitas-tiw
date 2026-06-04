@@ -7,6 +7,7 @@ import it.polimi.tiw.civitas.model.DecisionLog;
 import it.polimi.tiw.civitas.model.DecisionLogAction;
 import it.polimi.tiw.civitas.model.MembershipRole;
 import it.polimi.tiw.civitas.util.ConnectionHandler;
+import it.polimi.tiw.civitas.util.HtmlUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,11 +32,11 @@ public class MembershipService {
         validateInput(userId, nationId);
 
         if (nationDAO.findById(nationId).isEmpty()) {
-            throw new MembershipException("Nation not found.");
+            throw new MembershipException("Micro-nazione non trovata.");
         }
 
         if (membershipDAO.existsByUserAndNation(userId, nationId)) {
-            throw new MembershipException("You are already a citizen of this nation.");
+            throw new MembershipException("Sei già cittadino di questa micro-nazione.");
         }
 
         membershipDAO.createCitizenMembership(userId, nationId);
@@ -47,15 +48,15 @@ public class MembershipService {
         validateInput(actorId, nationId);
 
         if (targetUserId <= 0) {
-            throw new MembershipException("Invalid target user.");
+            throw new MembershipException("Utente destinatario non valido.");
         }
 
         if (action == null || action.trim().isEmpty()) {
-            throw new MembershipException("Invalid role action.");
+            throw new MembershipException("Azione sul ruolo non valida.");
         }
 
         if (nationDAO.findById(nationId).isEmpty()) {
-            throw new MembershipException("Nation not found.");
+            throw new MembershipException("Micro-nazione non trovata.");
         }
 
         try (Connection connection = ConnectionHandler.getConnection()) {
@@ -68,20 +69,20 @@ public class MembershipService {
                         membershipDAO.findRoleByUserAndNation(connection, actorId, nationId);
 
                 if (actorRoleOptional.isEmpty() || actorRoleOptional.get() != MembershipRole.FOUNDER) {
-                    throw new MembershipException("Only the founder can manage member roles.");
+                    throw new MembershipException("Solo il fondatore può gestire i ruoli dei membri.");
                 }
 
                 Optional<MembershipRole> targetRoleOptional =
                         membershipDAO.findRoleByUserAndNation(connection, targetUserId, nationId);
 
                 if (targetRoleOptional.isEmpty()) {
-                    throw new MembershipException("Target user is not a member of this nation.");
+                    throw new MembershipException("L'utente destinatario non fa parte di questa micro-nazione.");
                 }
 
                 MembershipRole currentRole = targetRoleOptional.get();
 
                 if (currentRole == MembershipRole.FOUNDER) {
-                    throw new MembershipException("The founder role cannot be changed.");
+                    throw new MembershipException("Il ruolo di fondatore non può essere modificato.");
                 }
 
                 MembershipRole newRole = resolveNewRole(currentRole, action);
@@ -94,8 +95,9 @@ public class MembershipService {
                 decisionLog.setActorId(actorId);
                 decisionLog.setAction(DecisionLogAction.ROLE_UPDATED);
                 decisionLog.setDescription(
-                        "User ID " + targetUserId + " role changed from "
-                                + currentRole.name() + " to " + newRole.name() + "."
+                        "Ruolo dell'utente ID " + targetUserId + " modificato da "
+                                + HtmlUtil.label(currentRole).toLowerCase() + " a "
+                                + HtmlUtil.label(newRole).toLowerCase() + "."
                 );
 
                 decisionLogDAO.create(connection, decisionLog);
@@ -119,7 +121,7 @@ public class MembershipService {
 
         if (ACTION_PROMOTE_MINISTER.equals(normalizedAction)) {
             if (currentRole != MembershipRole.CITIZEN) {
-                throw new MembershipException("Only citizens can be promoted to minister.");
+                throw new MembershipException("Solo i cittadini possono essere promossi a ministro.");
             }
 
             return MembershipRole.MINISTER;
@@ -127,22 +129,22 @@ public class MembershipService {
 
         if (ACTION_DEMOTE_CITIZEN.equals(normalizedAction)) {
             if (currentRole != MembershipRole.MINISTER) {
-                throw new MembershipException("Only ministers can be demoted to citizen.");
+                throw new MembershipException("Solo i ministri possono essere riportati al ruolo di cittadino.");
             }
 
             return MembershipRole.CITIZEN;
         }
 
-        throw new MembershipException("Unsupported role action.");
+        throw new MembershipException("Azione sul ruolo non supportata.");
     }
 
     private void validateInput(int userId, int nationId) throws MembershipException {
         if (userId <= 0) {
-            throw new MembershipException("Invalid user.");
+            throw new MembershipException("Utente non valido.");
         }
 
         if (nationId <= 0) {
-            throw new MembershipException("Invalid nation.");
+            throw new MembershipException("Micro-nazione non valida.");
         }
     }
 }

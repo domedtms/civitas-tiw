@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
 
         } catch (SQLException e) {
             preserveFormValues(request, email);
-            request.setAttribute("error", "Unexpected error. Please try again later.");
+            request.setAttribute("error", "Errore inatteso. Riprova più tardi.");
             request.getRequestDispatcher(LOGIN_VIEW).forward(request, response);
         }
     }

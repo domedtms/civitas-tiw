@@ -106,7 +106,7 @@ public class GenerateNewspaperServlet extends HttpServlet {
 
         } catch (SQLException e) {
             preserveFormValues(request, nationId, period);
-            request.setAttribute("error", "Unexpected error. Please try again later.");
+            request.setAttribute("error", "Errore inatteso. Riprova più tardi.");
             forwardWithNation(request, response, nationId);
         }
     }

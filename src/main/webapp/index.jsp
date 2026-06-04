@@ -26,14 +26,14 @@
                 <a class="button secondary" href="<%= request.getContextPath() %>/ranking">Classifica</a>
 
                 <form method="post" action="<%= request.getContextPath() %>/logout">
-                    <button type="submit" class="button">Logout</button>
+                    <button type="submit" class="button">Esci</button>
                 </form>
             </div>
         <% } else { %>
             <p>Accedi o registrati per iniziare a usare Civitas.</p>
 
             <div class="actions">
-                <a class="button" href="<%= request.getContextPath() %>/login">Login</a>
+                <a class="button" href="<%= request.getContextPath() %>/login">Accedi</a>
                 <a class="button secondary" href="<%= request.getContextPath() %>/register">Registrati</a>
                 <a class="button secondary" href="<%= request.getContextPath() %>/nations">Esplora micro-nazioni</a>
                 <a class="button secondary" href="<%= request.getContextPath() %>/ranking">Classifica</a>

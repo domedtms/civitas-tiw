@@ -94,7 +94,7 @@ public class CreateAnnouncementServlet extends HttpServlet {
 
         } catch (SQLException e) {
             preserveFormValues(request, nationId, title, content);
-            request.setAttribute("error", "Unexpected error. Please try again later.");
+            request.setAttribute("error", "Errore inatteso. Riprova più tardi.");
             request.getRequestDispatcher(CREATE_ANNOUNCEMENT_VIEW).forward(request, response);
         }
     }
