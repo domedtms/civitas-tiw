@@ -10,19 +10,19 @@ INSERT INTO users (id, username, email, password_hash)
 VALUES
     (
         1,
-        'founder',
+        'fondatore',
         'founder@civitas.test',
         '65536:Y2l2aXRhcy1mb3VuZGVyLQ==:ASXi7BMr1LL+5NSMvJ2/1DdUl6M4GSjlrQtf1HV+1kg='
     ),
     (
         2,
-        'citizen',
+        'cittadino',
         'citizen@civitas.test',
         '65536:Y2l2aXRhcy1jaXRpemVuLQ==:Mzj7QgW17CfpIGRFC9DDjKUal00OYAkIs/seRoaS+F4='
     ),
     (
         3,
-        'minister',
+        'ministro',
         'minister@civitas.test',
         '65536:Y2l2aXRhcy1mb3VuZGVyLQ==:ASXi7BMr1LL+5NSMvJ2/1DdUl6M4GSjlrQtf1HV+1kg='
     )
@@ -139,7 +139,7 @@ VALUES
         1,
         1,
         'LAW_PROPOSED',
-        'Seed event: law proposed.'
+        'Evento iniziale: legge proposta.'
     ),
     (
         2,
@@ -147,7 +147,7 @@ VALUES
         1,
         1,
         'LAW_APPROVED',
-        'Seed event: law approved.'
+        'Evento iniziale: legge approvata.'
     ),
     (
         3,
@@ -155,7 +155,7 @@ VALUES
         1,
         NULL,
         'RESOURCE_UPDATED',
-        'Seed event: resources updated after law approval.'
+        'Evento iniziale: risorse aggiornate dopo l''approvazione della legge.'
     ),
     (
         4,
@@ -163,7 +163,7 @@ VALUES
         NULL,
         1,
         'ROLE_UPDATED',
-        'Seed event: user promoted to minister.'
+        'Evento iniziale: utente promosso a ministro.'
     ),
     (
         5,
@@ -171,7 +171,7 @@ VALUES
         NULL,
         1,
         'RESOURCE_UPDATED',
-        'Seed event: resources updated after official announcement.'
+        'Evento iniziale: risorse aggiornate dopo il comunicato ufficiale.'
     )
 ON DUPLICATE KEY UPDATE
     nation_id = VALUES(nation_id),
@@ -202,7 +202,7 @@ VALUES (
     'Giornale Nazionale della Repubblica del Caffè — 2026-06',
     'Edizione dimostrativa del giornale nazionale generato automaticamente per la Repubblica del Caffè.',
     'Il quadro politico mostra una micro-nazione attiva, con leggi proposte, votazioni e decisioni istituzionali registrate.',
-    'Le risorse simboliche indicano una fase di sviluppo civico, con coins, cultura ed energia utilizzati per rappresentare lo stato della nazione.',
+    'Le risorse simboliche indicano una fase di sviluppo civico, con monete, cultura ed energia utilizzate per rappresentare lo stato della nazione.',
     'L’attività legislativa comprende proposte e approvazioni che mostrano il funzionamento del processo decisionale.',
     'I comunicati ufficiali dimostrano la presenza di comunicazione istituzionale da parte degli organi della micro-nazione.',
     'Lo storico decisionale registra eventi rilevanti come proposte di legge, approvazioni, aggiornamenti risorse e modifiche di ruolo.'

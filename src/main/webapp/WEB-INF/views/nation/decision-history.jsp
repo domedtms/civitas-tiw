@@ -45,11 +45,11 @@
                 <% for (DecisionLog log : decisionLogs) { %>
                     <article class="history-card">
                         <div class="history-card-header">
-                            <h2><%= HtmlUtil.escape(log.getAction().name()) %></h2>
+                            <h2><%= HtmlUtil.escape(HtmlUtil.label(log.getAction())) %></h2>
 
                             <% if (log.getCreatedAt() != null) { %>
                                 <span class="status-pill">
-                                    <%= HtmlUtil.escape(log.getCreatedAt().toString()) %>
+                                    <%= HtmlUtil.escape(HtmlUtil.formatDateTime(log.getCreatedAt())) %>
                                 </span>
                             <% } %>
                         </div>
@@ -58,12 +58,12 @@
 
                         <div class="history-meta">
                             <span>
-                                Law ID:
+                                ID legge:
                                 <strong><%= log.getLawId() != null ? log.getLawId() : "-" %></strong>
                             </span>
 
                             <span>
-                                Actor ID:
+                                ID attore:
                                 <strong><%= log.getActorId() != null ? log.getActorId() : "-" %></strong>
                             </span>
                         </div>

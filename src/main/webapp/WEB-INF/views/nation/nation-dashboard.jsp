@@ -9,7 +9,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - Civitas</title>
+    <title>Cruscotto - Civitas</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/css/main.css">
     <script src="<%= request.getContextPath() %>/js/nation-dashboard.js" defer></script>
 </head>
@@ -32,7 +32,7 @@
         </div>
 
         <h1>
-            Dashboard -
+            Cruscotto -
             <%= HtmlUtil.escape(nation.getFlagSymbol()) %>
             <%= HtmlUtil.escape(nation.getName()) %>
         </h1>
@@ -66,7 +66,7 @@
 
                         <article class="dashboard-card">
                             <strong id="foundersCount">-</strong>
-                            <span>Founder</span>
+                            <span>Fondatori</span>
                         </article>
 
                         <article class="dashboard-card">
@@ -76,7 +76,7 @@
 
                         <article class="dashboard-card">
                             <strong id="regularCitizensCount">-</strong>
-                            <span>Citizen</span>
+                            <span>Cittadini</span>
                         </article>
                     </div>
                 </section>
@@ -122,22 +122,22 @@
                     <div class="dashboard-grid">
                         <article class="dashboard-card">
                             <strong id="coins">-</strong>
-                            <span>Coins</span>
+                            <span>Monete</span>
                         </article>
 
                         <article class="dashboard-card">
                             <strong id="culturePoints">-</strong>
-                            <span>Culture</span>
+                            <span>Cultura</span>
                         </article>
 
                         <article class="dashboard-card">
                             <strong id="energyPoints">-</strong>
-                            <span>Energy</span>
+                            <span>Energia</span>
                         </article>
 
                         <article class="dashboard-card highlight-card">
                             <strong id="score">-</strong>
-                            <span>Score ranking</span>
+                            <span>Punteggio classifica</span>
                         </article>
                     </div>
                 </section>

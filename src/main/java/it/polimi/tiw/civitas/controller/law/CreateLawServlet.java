@@ -92,7 +92,7 @@ public class CreateLawServlet extends HttpServlet {
 
         } catch (SQLException e) {
             preserveFormValues(request, nationId, title, description);
-            request.setAttribute("error", "Unexpected error. Please try again later.");
+            request.setAttribute("error", "Errore inatteso. Riprova più tardi.");
             request.getRequestDispatcher(CREATE_LAW_VIEW).forward(request, response);
         }
     }

@@ -46,7 +46,7 @@
             </a>
         </div>
 
-        <p class="<%= statusClass %>"><%= HtmlUtil.escape(law.getStatus().name()) %></p>
+        <p class="<%= statusClass %>"><%= HtmlUtil.escape(HtmlUtil.label(law.getStatus())) %></p>
 
         <h1><%= HtmlUtil.escape(law.getTitle()) %></h1>
 
@@ -65,17 +65,17 @@
             <div class="vote-counts">
                 <div class="vote-count-card">
                     <strong><%= yesCount %></strong>
-                    <span>YES</span>
+                    <span><%= HtmlUtil.escape(HtmlUtil.label(VoteValue.YES)) %></span>
                 </div>
 
                 <div class="vote-count-card">
                     <strong><%= noCount %></strong>
-                    <span>NO</span>
+                    <span><%= HtmlUtil.escape(HtmlUtil.label(VoteValue.NO)) %></span>
                 </div>
 
                 <div class="vote-count-card">
                     <strong><%= abstainCount %></strong>
-                    <span>ABSTAIN</span>
+                    <span><%= HtmlUtil.escape(HtmlUtil.label(VoteValue.ABSTAIN)) %></span>
                 </div>
             </div>
         </section>
@@ -100,7 +100,7 @@
                 <% if (!law.getStatus().name().equals("PROPOSED")) { %>
                     <p class="muted">
                         Questa legge non è più votabile perché si trova nello stato
-                        <strong><%= HtmlUtil.escape(law.getStatus().name()) %></strong>.
+                        <strong><%= HtmlUtil.escape(HtmlUtil.label(law.getStatus())) %></strong>.
                     </p>
                 <% } else { %>
                     <p class="muted">Questa legge non è aperta al voto.</p>
@@ -109,9 +109,9 @@
                 <form method="post" action="<%= request.getContextPath() %>/law/vote" class="vote-form">
                     <input type="hidden" name="lawId" value="<%= law.getId() %>">
 
-                    <button type="submit" name="voteValue" value="YES" class="button">YES</button>
-                    <button type="submit" name="voteValue" value="NO" class="button secondary">NO</button>
-                    <button type="submit" name="voteValue" value="ABSTAIN" class="button secondary">ABSTAIN</button>
+                    <button type="submit" name="voteValue" value="YES" class="button"><%= HtmlUtil.escape(HtmlUtil.label(VoteValue.YES)) %></button>
+                    <button type="submit" name="voteValue" value="NO" class="button secondary"><%= HtmlUtil.escape(HtmlUtil.label(VoteValue.NO)) %></button>
+                    <button type="submit" name="voteValue" value="ABSTAIN" class="button secondary"><%= HtmlUtil.escape(HtmlUtil.label(VoteValue.ABSTAIN)) %></button>
                 </form>
             <% } %>
         </section>
@@ -127,7 +127,7 @@
 
             <% if (canCloseLaw) { %>
                 <p class="muted">
-                    Questa legge è ancora in stato <strong>PROPOSED</strong>.
+                    Questa legge è ancora in stato <strong>proposta</strong>.
                     Puoi chiudere la votazione e calcolare l'esito.
                 </p>
 
@@ -138,7 +138,7 @@
 
             <% } else if (canRepealLaw) { %>
                 <p class="muted">
-                    Questa legge è attualmente <strong>APPROVED</strong>.
+                    Questa legge è attualmente <strong>approvata</strong>.
                     Puoi abrogarla se non è più valida per la micro-nazione.
                 </p>
 
@@ -149,7 +149,7 @@
 
             <% } else if (law.getStatus().name().equals("PROPOSED")) { %>
                 <p class="muted">
-                    Solo FOUNDER o MINISTER possono chiudere la votazione.
+                    Solo il fondatore o un ministro possono chiudere la votazione.
                 </p>
 
             <% } else if (law.getStatus().name().equals("APPROVED")) { %>
@@ -164,7 +164,7 @@
 
             <% } else { %>
                 <p class="badge">
-                    Votazione chiusa: <%= HtmlUtil.escape(law.getStatus().name()) %>
+                    Votazione chiusa: <%= HtmlUtil.escape(HtmlUtil.label(law.getStatus())) %>
                 </p>
             <% } %>
         </section>
@@ -172,14 +172,14 @@
         <hr>
 
         <p class="muted">
-            Proponente ID: <%= law.getProposerId() %>
+            ID proponente: <%= law.getProposerId() %>
             <% if (law.getCreatedAt() != null) { %>
-                · Proposta il <%= HtmlUtil.escape(law.getCreatedAt().toString()) %>
+                · Proposta il <%= HtmlUtil.escape(HtmlUtil.formatDateTime(law.getCreatedAt())) %>
             <% } %>
         </p>
 
         <% if (law.getClosedAt() != null) { %>
-            <p class="muted">Chiusa il <%= HtmlUtil.escape(law.getClosedAt().toString()) %></p>
+            <p class="muted">Chiusa il <%= HtmlUtil.escape(HtmlUtil.formatDateTime(law.getClosedAt())) %></p>
         <% } %>
     </section>
 </main>

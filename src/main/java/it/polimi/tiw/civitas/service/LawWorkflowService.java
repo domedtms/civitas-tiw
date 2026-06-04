@@ -11,6 +11,7 @@ import it.polimi.tiw.civitas.model.LawStatus;
 import it.polimi.tiw.civitas.model.MembershipRole;
 import it.polimi.tiw.civitas.model.VoteValue;
 import it.polimi.tiw.civitas.util.ConnectionHandler;
+import it.polimi.tiw.civitas.util.HtmlUtil;
 import it.polimi.tiw.civitas.dao.NationResourceDAO;
 
 import java.sql.Connection;
@@ -86,11 +87,11 @@ public class LawWorkflowService {
 
     public LawStatus closeLaw(int lawId, int actorId) throws SQLException, LawWorkflowException {
         if (lawId <= 0) {
-            throw new LawWorkflowException("Invalid law.");
+            throw new LawWorkflowException("Legge non valida.");
         }
 
         if (actorId <= 0) {
-            throw new LawWorkflowException("Invalid actor.");
+            throw new LawWorkflowException("Attore non valido.");
         }
 
         try (Connection connection = ConnectionHandler.getConnection()) {
@@ -102,13 +103,13 @@ public class LawWorkflowService {
                 Optional<Law> lawOptional = lawDAO.findById(connection, lawId);
 
                 if (lawOptional.isEmpty()) {
-                    throw new LawWorkflowException("Law not found.");
+                    throw new LawWorkflowException("Legge non trovata.");
                 }
 
                 Law law = lawOptional.get();
 
                 if (law.getStatus() != LawStatus.PROPOSED) {
-                    throw new LawWorkflowException("Only proposed laws can be closed.");
+                    throw new LawWorkflowException("Solo le leggi proposte possono essere chiuse.");
                 }
 
                 boolean authorized = membershipDAO.hasAnyRole(
@@ -119,7 +120,7 @@ public class LawWorkflowService {
                 );
 
                 if (!authorized) {
-                    throw new LawWorkflowException("You are not authorized to close this vote.");
+                    throw new LawWorkflowException("Non sei autorizzato a chiudere questa votazione.");
                 }
 
                 Map<VoteValue, Integer> voteCounts = voteDAO.countByLawGrouped(connection, lawId);
@@ -162,11 +163,11 @@ public class LawWorkflowService {
 
     public void repealLaw(int lawId, int actorId) throws SQLException, LawWorkflowException {
         if (lawId <= 0) {
-            throw new LawWorkflowException("Invalid law.");
+            throw new LawWorkflowException("Legge non valida.");
         }
 
         if (actorId <= 0) {
-            throw new LawWorkflowException("Invalid actor.");
+            throw new LawWorkflowException("Attore non valido.");
         }
 
         try (Connection connection = ConnectionHandler.getConnection()) {
@@ -178,13 +179,13 @@ public class LawWorkflowService {
                 Optional<Law> lawOptional = lawDAO.findById(connection, lawId);
 
                 if (lawOptional.isEmpty()) {
-                    throw new LawWorkflowException("Law not found.");
+                    throw new LawWorkflowException("Legge non trovata.");
                 }
 
                 Law law = lawOptional.get();
 
                 if (law.getStatus() != LawStatus.APPROVED) {
-                    throw new LawWorkflowException("Only approved laws can be repealed.");
+                    throw new LawWorkflowException("Solo le leggi approvate possono essere abrogate.");
                 }
 
                 boolean authorized = membershipDAO.hasAnyRole(
@@ -195,7 +196,7 @@ public class LawWorkflowService {
                 );
 
                 if (!authorized) {
-                    throw new LawWorkflowException("You are not authorized to repeal this law.");
+                    throw new LawWorkflowException("Non sei autorizzato ad abrogare questa legge.");
                 }
 
                 lawDAO.updateStatus(connection, lawId, LawStatus.REPEALED);
@@ -206,14 +207,14 @@ public class LawWorkflowService {
                 decisionLog.setLawId(lawId);
                 decisionLog.setActorId(actorId);
                 decisionLog.setAction(DecisionLogAction.LAW_REPEALED);
-                decisionLog.setDescription("Law \"" + law.getTitle() + "\" was repealed.");
+                decisionLog.setDescription("Legge \"" + law.getTitle() + "\" abrogata.");
 
                 DecisionLog resourceLog = new DecisionLog();
                 resourceLog.setNationId(law.getNationId());
                 resourceLog.setLawId(lawId);
                 resourceLog.setActorId(null);
                 resourceLog.setAction(DecisionLogAction.RESOURCE_UPDATED);
-                resourceLog.setDescription("Resources updated after law repeal: coins -10, culture -5.");
+                resourceLog.setDescription("Risorse aggiornate dopo l'abrogazione della legge: monete -10, cultura -5.");
 
                 decisionLogDAO.create(connection, resourceLog);
 
@@ -242,19 +243,19 @@ public class LawWorkflowService {
 
         if (resultStatus == LawStatus.APPROVED) {
             nationResourceDAO.incrementResources(connection, law.getNationId(), 20, 10, 5);
-            resourceLog.setDescription("Resources updated after law approval: coins +20,culture +10, energy +5.");
+            resourceLog.setDescription("Risorse aggiornate dopo l'approvazione della legge: monete +20, cultura +10, energia +5.");
         } else {
             nationResourceDAO.incrementResources(connection, law.getNationId(), -5, 0, -2);
-            resourceLog.setDescription("Resources updated after law rejection: coins -5, energy -2.");
+            resourceLog.setDescription("Risorse aggiornate dopo la bocciatura della legge: monete -5, energia -2.");
         }
 
         decisionLogDAO.create(connection, resourceLog);
     }
 
     private String buildDecisionDescription(Law law, LawStatus resultStatus, int yesVotes, int noVotes) {
-        return "Law \"" + law.getTitle() + "\" was "
-                + resultStatus.name()
-                + " with YES=" + yesVotes
-                + " and NO=" + noVotes + ".";
+        return "Legge \"" + law.getTitle() + "\" "
+                + HtmlUtil.label(resultStatus).toLowerCase()
+                + " con voti favorevoli=" + yesVotes
+                + " e voti contrari=" + noVotes + ".";
     }
 }

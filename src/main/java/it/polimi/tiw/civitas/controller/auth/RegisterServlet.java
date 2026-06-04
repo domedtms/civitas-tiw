@@ -58,7 +58,7 @@ public class RegisterServlet extends HttpServlet {
 
         } catch (SQLException e) {
             preserveFormValues(request, username, email);
-            request.setAttribute("error", "Unexpected error. Please try again later.");
+            request.setAttribute("error", "Errore inatteso. Riprova più tardi.");
             request.getRequestDispatcher(REGISTER_VIEW).forward(request, response);
         }
     }

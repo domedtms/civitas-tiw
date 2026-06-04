@@ -23,7 +23,7 @@
         <% } %>
 
         <form method="post" action="<%= request.getContextPath() %>/register" class="form">
-            <label for="username">Username</label>
+            <label for="username">Nome utente</label>
             <input id="username"
                    type="text"
                    name="username"
